@@ -1,0 +1,76 @@
+name: Build and deploy azure functions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "pubsub/**"
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "pubsub" # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: "6.0.x" # set this to the dotnet version to use
+  BASE_RG_NAME: cardraces
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set default deploy environment
+        run: |
+          if [ -z "${{ inputs.environment }}" ]
+          then
+            echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set resource group environment name
+        run: |
+          echo "RESOURCEGROUP_NAME=${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-rg" >> $GITHUB_ENV
+
+      - name: Setup dotnet ${{ env.DOTNET_VERSION }} environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Resolve project dependencies using dotnet
+        run: |
+          cd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          cd ..
+
+      - name: Get functionapp name
+        run: |
+          echo "FUNCTIONAPP_NAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].name)" >> $GITHUB_ENV
+
+      - name: Set publish profile
+        id: pub-output
+        run: |
+          echo "PUB_PROFILE=$(az functionapp deployment list-publishing-profiles -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ env.RESOURCEGROUP_NAME }} --xml)" >> $GITHUB_OUTPUT
+
+      - name: Run Azure functions action
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.FUNCTIONAPP_NAME }}
+          # slot-name: "Production"
+          package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
+          publish-profile: ${{ steps.pub-output.outputs.PUB_PROFILE }}
+
+      - name: Add or upgrade pubsub extension
+        run: |
+          az extension add --upgrade --name webpubsub
+
+      - name: Create hub
+        run: |
+          az webpubsub hub create --hub-name simplechat --event-handler url-template="https://${{ env.FUNCTIONAPP_NAME }}.azurewebsites.net/runtime/webhooks/webpubsub?code=$(az functionapp keys list -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ env.RESOURCEGROUP_NAME }} --query systemKeys.webpubsub_extension --output tsv)" user-event-pattern=* -n ${{ env.DEPLOY_ENV }}-pubsub -g ${{ env.RESOURCEGROUP_NAME }} --output none

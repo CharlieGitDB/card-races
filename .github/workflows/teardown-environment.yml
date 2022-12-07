@@ -1,4 +1,4 @@
-name: Teardown Environment
+name: Teardown environment
 
 on:
   workflow_dispatch:
@@ -6,6 +6,9 @@ on:
       environment:
         type: environment
         description: Select the environment
+
+env:
+  RESOURCEGROUP_NAME: ${{ inputs.enviromnet }}-cardraces-rg
 
 jobs:
   delete-resourcegroup:
@@ -18,4 +21,4 @@ jobs:
 
       - name: Delete Resource Group
         run: |
-          az group delete --resource-group ${{ inputs.environment }}-cardraces-rg --yes
+          az group delete --resource-group ${{ env.RESOURCEGROUP_NAME }} --yes
