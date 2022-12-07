@@ -7,9 +7,6 @@ on:
         type: environment
         description: Select the environment
 
-env:
-  RESOURCEGROUP_NAME: ${{ inputs.enviromnet }}-cardraces-rg
-
 jobs:
   delete-resourcegroup:
     runs-on: ubuntu-latest
@@ -21,4 +18,4 @@ jobs:
 
       - name: Delete Resource Group
         run: |
-          az group delete --resource-group ${{ env.RESOURCEGROUP_NAME }} --yes
+          az group delete --resource-group ${{ inputs.enviromnet }}-cardraces-rg --yes
