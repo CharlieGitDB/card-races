@@ -1,4 +1,4 @@
-name: Configure Resource Group
+name: Provision resource group
 
 on:
   workflow_call:
@@ -24,12 +24,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Check if ${{ inputs.resourcegroup }} resource group exists
-        id: resource-group-check
+      - name: Create resource group
         run: |
-          echo "RESOURCE_GROUP_EXISTS=$(az group exists --resource-group ${{ inputs.resourcegroup }} --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }})" >> $GITHUB_ENV
-
-      - name: Create resource group if it doesn't exist
-        if: ${{ env.RESOURCE_GROUP_EXISTS == 'false' }}
-        run: |
-          az group create --name ${{ inputs.resourcegroup }} --location ${{ inputs.resourcegroup-location }}
+          az group create --name ${{ inputs.resourcegroup }} --location ${{ inputs.resourcegroup-location }} --output none

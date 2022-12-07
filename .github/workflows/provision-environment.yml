@@ -1,4 +1,4 @@
-name: Provision Environment
+name: Provision environment
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ on:
           - "northeurope"
 
 jobs:
-  configure-resourcegroup:
+  provision-resourcegroup:
     uses: ./.github/workflows/resourcegroup-config.yml
     with:
       resourcegroup: ${{ inputs.environment }}-cardraces-rg
@@ -26,8 +26,8 @@ jobs:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-  configure-pubsub:
-    needs: configure-resourcegroup
+  provision-pubsub:
+    needs: provision-resourcegroup
     uses: ./.github/workflows/pubsub-config.yml
     with:
       resourcegroup: ${{ inputs.environment }}-cardraces-rg
@@ -36,8 +36,8 @@ jobs:
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
-  configure-storage:
-    needs: configure-resourcegroup
+  provision-storage:
+    needs: provision-resourcegroup
     uses: ./.github/workflows/storage-config.yml
     with:
       resourcegroup: ${{ inputs.environment }}-cardraces-rg
@@ -46,8 +46,8 @@ jobs:
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
-  configure-functionapp:
-    needs: [configure-resourcegroup, configure-pubsub, configure-storage]
+  provision-functionapp:
+    needs: [provision-resourcegroup, provision-pubsub, provision-storage]
     uses: ./.github/workflows/functionapp-config.yml
     with:
       resourcegroup: ${{ inputs.environment }}-cardraces-rg

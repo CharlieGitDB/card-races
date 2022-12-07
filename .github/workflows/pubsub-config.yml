@@ -1,4 +1,4 @@
-name: Configure Azure Web PubSub
+name: Provision Azure web pubsub
 
 on:
   workflow_call:
@@ -29,12 +29,6 @@ jobs:
         run: |
           az extension add --upgrade --name webpubsub
 
-      - name: Check if ${{ inputs.pubsub-name }} web pubsub exists
-        id: pubsub-check
+      - name: Create web pubsub
         run: |
-          echo "PUBSUB_EXISTS=$(az webpubsub show -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --query name)" >> $GITHUB_ENV
-
-      - name: Create web pubsub if it doesn't exist
-        if: ${{ env.PUBSUB_EXISTS  != inputs.pubsub-name }}
-        run: |
-          az webpubsub create -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --location ${{ inputs.resourcegroup-location }} --sku Free_F1
+          az webpubsub create -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --location ${{ inputs.resourcegroup-location }} --sku Free_F1 --output none

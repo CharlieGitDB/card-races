@@ -1,4 +1,4 @@
-name: Configure Function App
+name: Provision function app
 
 on:
   workflow_call:
@@ -40,16 +40,12 @@ jobs:
 
       - name: Create functionapp
         run: |
-          az functionapp create -g ${{ inputs.resourcegroup }} --consumption-plan-location ${{ inputs.resourcegroup-location }} --runtime dotnet --functions-version 4 --name ${{ env.FUNCTIONAPP_NAME }} --storage-account ${{ env.STORAGE_ACCOUNT }}
+          az functionapp create -g ${{ inputs.resourcegroup }} --consumption-plan-location ${{ inputs.resourcegroup-location }} --runtime dotnet --functions-version 4 --name ${{ env.FUNCTIONAPP_NAME }} --storage-account ${{ env.STORAGE_ACCOUNT }} --output none
 
       - name: Add or upgrade pubsub extension
         run: |
           az extension add --upgrade --name webpubsub
 
-      - name: Get web pubsub connection string
-        run: |
-          echo "PUBSUB_CONNECTION=$(az webpubsub key show -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --query primaryConnectionString)" >> $GITHUB_ENV
-
       - name: Set web pubsub connectionstring as application setting
         run: |
-          az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings WebPubSubConnectionString=${{ env.PUBSUB_CONNECTION }}
+          az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings WebPubSubConnectionString=$(az webpubsub key show -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --query primaryConnectionString --output tsv) --output none
