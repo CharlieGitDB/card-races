@@ -1,0 +1,30 @@
+name: Configure Storage
+
+on:
+  workflow_call:
+    inputs:
+      resourcegroup:
+        required: true
+        type: string
+      resourcegroup-location:
+        required: true
+        type: string
+      storage-name:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
+jobs:
+  provision-storage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create storage if it doesn't exist
+        run: |
+          az storage account create -n "${{ inputs.storage-name }}$RANDOM" -l ${{ inputs.resourcegroup-location }} -g ${{ inputs.resourcegroup }}

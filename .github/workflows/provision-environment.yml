@@ -1,0 +1,58 @@
+name: Provision Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+      resourcegroup-location:
+        type: choice
+        description: Select the location
+        options:
+          - "eastus"
+          - "westus"
+          - "centralus"
+          - "southcentralus"
+          - "northeurope"
+
+jobs:
+  configure-resourcegroup:
+    uses: ./.github/workflows/resourcegroup-config.yml
+    with:
+      resourcegroup: ${{ inputs.environment }}-cardraces-rg
+      resourcegroup-location: ${{ inputs.resourcegroup-location }}
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  configure-pubsub:
+    needs: configure-resourcegroup
+    uses: ./.github/workflows/pubsub-config.yml
+    with:
+      resourcegroup: ${{ inputs.environment }}-cardraces-rg
+      resourcegroup-location: ${{ inputs.resourcegroup-location }}
+      pubsub-name: ${{ inputs.environment }}-pubsub
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+  configure-storage:
+    needs: configure-resourcegroup
+    uses: ./.github/workflows/storage-config.yml
+    with:
+      resourcegroup: ${{ inputs.environment }}-cardraces-rg
+      resourcegroup-location: ${{ inputs.resourcegroup-location }}
+      storage-name: ${{ inputs.environment }}hrstorage
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+  configure-functionapp:
+    needs: [configure-resourcegroup, configure-pubsub, configure-storage]
+    uses: ./.github/workflows/functionapp-config.yml
+    with:
+      resourcegroup: ${{ inputs.environment }}-cardraces-rg
+      resourcegroup-location: ${{ inputs.resourcegroup-location }}
+      functionapp-name: ${{ inputs.environment }}-functionapp
+      pubsub-name: ${{ inputs.environment }}-pubsub
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "name": "Pub Sub",
+      "path": "./pubsub"
+    },
+    {
+      "name": "Client",
+      "path": "./client"
+    },
+    {
+      "name": "Workflows",
+      "path": ".github/workflows"
+    },
+    {
+      "name": "Misc",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/pubsub": true,
+      "**/client": true,
+      ".github": true
+    },
+    "debug.internalConsoleOptions": "neverOpen"
+  }
+}

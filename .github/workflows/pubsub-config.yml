@@ -1,0 +1,40 @@
+name: Configure Azure Web PubSub
+
+on:
+  workflow_call:
+    inputs:
+      resourcegroup:
+        required: true
+        type: string
+      resourcegroup-location:
+        required: true
+        type: string
+      pubsub-name:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
+jobs:
+  provision-pubsub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Add or upgrade azure web pubsub extension
+        run: |
+          az extension add --upgrade --name webpubsub
+
+      - name: Check if ${{ inputs.pubsub-name }} web pubsub exists
+        id: pubsub-check
+        run: |
+          echo "PUBSUB_EXISTS=$(az webpubsub show -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --query name)" >> $GITHUB_ENV
+
+      - name: Create web pubsub if it doesn't exist
+        if: ${{ env.PUBSUB_EXISTS  != inputs.pubsub-name }}
+        run: |
+          az webpubsub create -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --location ${{ inputs.resourcegroup-location }} --sku Free_F1

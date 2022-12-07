@@ -1,0 +1,55 @@
+name: Configure Function App
+
+on:
+  workflow_call:
+    inputs:
+      resourcegroup:
+        required: true
+        type: string
+      resourcegroup-location:
+        required: true
+        type: string
+      functionapp-name:
+        required: true
+        type: string
+      pubsub-name:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
+jobs:
+  provision-functionapp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # this is only getting the storage account by first index
+      # will need to filter for the correct storage account differently if another is added at some point
+      - name: Get storage account name
+        run: |
+          echo "STORAGE_ACCOUNT=$(az storage account list --query [0].name -g ${{ inputs.resourcegroup }})" >> $GITHUB_ENV
+
+      - name: Set functionapp name
+        run: |
+          echo "FUNCTIONAPP_NAME=${{ inputs.functionapp-name}}$RANDOM" >> $GITHUB_ENV
+
+      - name: Create functionapp
+        run: |
+          az functionapp create -g ${{ inputs.resourcegroup }} --consumption-plan-location ${{ inputs.resourcegroup-location }} --runtime dotnet --functions-version 4 --name ${{ env.FUNCTIONAPP_NAME }} --storage-account ${{ env.STORAGE_ACCOUNT }}
+
+      - name: Add or upgrade pubsub extension
+        run: |
+          az extension add --upgrade --name webpubsub
+
+      - name: Get web pubsub connection string
+        run: |
+          echo "PUBSUB_CONNECTION=$(az webpubsub key show -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --query primaryConnectionString)" >> $GITHUB_ENV
+
+      - name: Set web pubsub connectionstring as application setting
+        run: |
+          az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings WebPubSubConnectionString=${{ env.PUBSUB_CONNECTION }}
