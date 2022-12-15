@@ -14,7 +14,7 @@ namespace pubsub
 {
   public static class game
   {
-    [FunctionName("game")]
+    [FunctionName("message")]
     public static async Task<UserEventResponse> Run(
         [WebPubSubTrigger("game", WebPubSubEventType.User, "message")] UserEventRequest request,
         string data,
