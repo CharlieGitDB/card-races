@@ -14,15 +14,15 @@ namespace pubsub
 {
   public static class game
   {
-    [FunctionName("message")]
+    [FunctionName("game")]
     public static async Task<UserEventResponse> Run(
         [WebPubSubTrigger("game", WebPubSubEventType.User, "message")] UserEventRequest request,
-        string data,
+        BinaryData data,
         WebPubSubDataType dataType,
         [WebPubSub(Hub = "game")] IAsyncCollector<WebPubSubAction> actions)
     {
       await actions.AddAsync(WebPubSubAction.CreateSendToAllAction(
-          BinaryData.FromString($"[{request.ConnectionContext.UserId}] {data}"),
+          BinaryData.FromString($"[{request.ConnectionContext.UserId}] {data.ToString()}"),
           dataType));
 
       return new UserEventResponse
