@@ -73,4 +73,4 @@ jobs:
 
       - name: Create hub
         run: |
-          az webpubsub hub create --hub-name simplechat --event-handler url-template="https://${{ env.FUNCTIONAPP_NAME }}.azurewebsites.net/runtime/webhooks/webpubsub?code=$(az functionapp keys list -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ env.RESOURCEGROUP_NAME }} --query systemKeys.webpubsub_extension --output tsv)" user-event-pattern=* -n ${{ env.DEPLOY_ENV }}-pubsub -g ${{ env.RESOURCEGROUP_NAME }} --output none
+          az webpubsub hub create --hub-name game --event-handler url-template="https://${{ env.FUNCTIONAPP_NAME }}.azurewebsites.net/runtime/webhooks/webpubsub?code=$(az functionapp keys list -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ env.RESOURCEGROUP_NAME }} --query systemKeys.webpubsub_extension --output tsv)" user-event-pattern=* -n ${{ env.DEPLOY_ENV }}-pubsub -g ${{ env.RESOURCEGROUP_NAME }} --output none

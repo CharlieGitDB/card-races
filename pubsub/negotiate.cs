@@ -11,7 +11,7 @@ namespace pubsub
     [FunctionName("negotiate")]
     public static WebPubSubConnection Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-        [WebPubSubConnection(Hub = "simplechat", UserId = "{query.username}")] WebPubSubConnection connection,
+        [WebPubSubConnection(Hub = "game", UserId = "{query.username}")] WebPubSubConnection connection,
         ILogger log)
     {
       log.LogInformation("Connecting...");
