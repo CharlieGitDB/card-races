@@ -14,7 +14,7 @@ namespace pubsub
 {
   public static class message
   {
-    [FunctionName("message")]
+    [FunctionName("chat")]
     public static async Task<UserEventResponse> Run(
         [WebPubSubTrigger("simplechat", WebPubSubEventType.User, "message")] UserEventRequest request,
         BinaryData data,
