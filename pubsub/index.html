@@ -19,6 +19,7 @@
                 // connect
                 console.log(url, 'url??');
                 let ws = new WebSocket(url.url);
+                ws.onerror = (e) => console.log(e, 'error?');
                 ws.onopen = () => console.log('connected');
                 ws.onmessage = event => {
                     let m = document.createElement('p');
