@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Azure.Core;
 using Microsoft.Azure.Cosmos;
 using PubSub.Model;
+using PubSub.Util;
 
 namespace PubSub.Service;
 
@@ -33,12 +34,11 @@ public class GameService
   }
 
   // group will be shortid
-  public async Task<GameEntry> CreateGameAsync(string group, string userId, Suit suit)
+  public async Task<GameEntry> CreateGameAsync(string userId, Suit suit)
   {
     var gameCreateResponse = await Container.CreateItemAsync(new GameEntry
     {
-      Id = group,
-      Group = group,
+      Id = IdUtil.GenerateId(),
       Users = new() { userId },
       Suits = new() { suit }
     });

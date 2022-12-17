@@ -8,5 +8,5 @@ public class GameConstants
 
   public static readonly string CONTAINER = "games";
 
-  public static readonly string GAME_PARTITION_KEY = "/group";
+  public static readonly string GAME_PARTITION_KEY = "/id";
 }
