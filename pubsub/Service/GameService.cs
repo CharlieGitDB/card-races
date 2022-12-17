@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Azure.Core;
 using Microsoft.Azure.Cosmos;
 using PubSub.Model;
 using PubSub.Util;
@@ -33,7 +27,6 @@ public class GameService
     Container = container.Result;
   }
 
-  // group will be shortid
   public async Task<GameEntry> CreateGameAsync(string userId, Suit suit)
   {
     var gameCreateResponse = await Container.CreateItemAsync(new GameEntry
@@ -46,8 +39,7 @@ public class GameService
     return gameCreateResponse.Resource;
   }
 
-  // group will be shortid
-  public async Task<GameEntry> GetGame(string group)
+  public async Task<GameEntry> GetGameAsync(string group)
   {
     try
     {
@@ -69,7 +61,7 @@ public class GameService
     }
   }
 
-  public async Task<GameEntry> JoinGame(string userId, Suit suit, GameEntry game)
+  public async Task<GameEntry> JoinGameAsync(string userId, Suit suit, GameEntry game)
   {
     game.Users.Add(userId);
 
@@ -78,11 +70,10 @@ public class GameService
       game.Suits.Add(suit);
     }
 
-    return await UpdateGame(game);
+    return await UpdateGameAsync(game);
   }
 
-  // group will be shortid
-  private async Task<GameEntry> UpdateGame(GameEntry game)
+  private async Task<GameEntry> UpdateGameAsync(GameEntry game)
   {
     var updateGameResponse = await Container.UpsertItemAsync<GameEntry>(game);
     return updateGameResponse.Resource;

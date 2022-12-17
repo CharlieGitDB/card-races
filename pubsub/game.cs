@@ -16,6 +16,7 @@ using PubSub.Service;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using PubSub.Util;
+using System.Threading;
 
 namespace PubSub
 {
@@ -58,27 +59,30 @@ namespace PubSub
       else if (gameEvent.EventType == EventType.JOIN)
       {
         var (group, suit) = gameEvent.Data;
-        var game = await _gameService.GetGame(group);
+        var game = await _gameService.GetGameAsync(group);
         if (game == null)
         {
           throw new Exception($"Game id ${group} is invalid");
         }
 
-        logger.LogInformation($"[{userId}][GAME][GET] Found game [{JsonConvert.SerializeObject(game)}]");
-        logger.LogInformation($"[{userId}][JOIN][GROUP] {group}");
-        logger.LogInformation($"[{userId}][JOIN][SUIT] {suit}");
-        var updatedGame = await _gameService.JoinGame(userId, suit, game);
+        var updatedGame = await _gameService.JoinGameAsync(userId, suit, game);
         logger.LogInformation($"[{userId}][JOIN] Joined game [{JsonConvert.SerializeObject(updatedGame)}]");
         gameContextService.UpdateGameContext(updatedGame.Id, suit);
+
         await actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, updatedGame.Id));
       }
       else if (gameEvent.EventType == EventType.START)
       {
-        logger.LogInformation("[{userId}][START] HIT START!");
-        // to only group
+        logger.LogInformation("[{userId}][START] Starting game..");
+        // to group only
+        var group = gameContextService.Instance.Group;
+        var messageData = BinaryData.FromString($"[{userId}] Group only!");
+        await actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, dataType));
+
+        Thread.Sleep(10000);
         await actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(
           gameContextService.Instance.Group,
-          BinaryData.FromString($"[{userId}] Group only!"),
+          BinaryData.FromString($"[{userId}] First move!"),
           dataType
         ));
       }
