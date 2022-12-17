@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace pubsub
+namespace PubSub
 {
-  public static class index
+  public static class Index
   {
     [FunctionName("index")]
     public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous)] HttpRequest req, ILogger log)

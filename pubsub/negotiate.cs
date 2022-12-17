@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.WebJobs.Extensions.WebPubSub;
 
-namespace pubsub
+namespace PubSub
 {
-  public static class negotiate
+  public static class Negotiate
   {
     [FunctionName("negotiate")]
     public static WebPubSubConnection Run(
