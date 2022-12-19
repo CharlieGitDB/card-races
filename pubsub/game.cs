@@ -42,7 +42,6 @@ public class Game
         var suit = gameEvent.Data?.Suit;
         if (suit == null) throw new Exception("Suit is required");
 
-        _logger.LogInformation("Creating game..");
         await gameEventHandler.HandleCreateGame(userId, (Suit)suit);
         break;
       case EventType.JOIN:
