@@ -83,32 +83,32 @@ public class GameService
     return await UpdateGameAsync(game);
   }
 
-  public async Task<GameEntry> NextRoundAsync(ILogger logger, GameEntry game)
-  {
-    game.CurrentRound = game.CurrentRound + 1;
+  // public async Task<GameEntry> NextRoundAsync(ILogger logger, GameEntry game)
+  // {
+  //   game.CurrentRound = game.CurrentRound + 1;
 
-    Random random = new Random();
-    int randomIndex = random.Next(game.PickedSuits.Count);
-    Suit randomSuit = game.PickedSuits.ToArray()[randomIndex];
+  //   Random random = new Random();
+  //   int randomIndex = random.Next(game.PickedSuits.Count);
+  //   Suit randomSuit = game.PickedSuits.ToArray()[randomIndex];
 
-    logger.LogInformation($"Picked suit {randomSuit.ToString()}");
+  //   logger.LogInformation($"Picked suit {randomSuit.ToString()}");
 
-    var entry = game.Stats[randomSuit];
-    logger.LogInformation($"Entry from stats = {JsonConvert.SerializeObject(entry)}");
-    var updatedCount = entry + 1;
+  //   var entry = game.Stats[randomSuit];
+  //   logger.LogInformation($"Entry from stats = {JsonConvert.SerializeObject(entry)}");
+  //   var updatedCount = entry + 1;
 
-    logger.LogInformation($"Current count {updatedCount}");
+  //   logger.LogInformation($"Current count {updatedCount}");
 
-    game.Stats[randomSuit] = updatedCount;
+  //   game.Stats[randomSuit] = updatedCount;
 
-    logger.LogInformation($"Game {JsonConvert.SerializeObject(game)}");
+  //   logger.LogInformation($"Game {JsonConvert.SerializeObject(game)}");
 
-    if (updatedCount == 10)
-    {
-      game.Winner = randomSuit;
-    }
-    return await UpdateGameAsync(game);
-  }
+  //   if (updatedCount == 10)
+  //   {
+  //     game.Winner = randomSuit;
+  //   }
+  //   return await UpdateGameAsync(game);
+  // }
 
   private async Task<GameEntry> UpdateGameAsync(GameEntry game)
   {

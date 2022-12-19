@@ -66,7 +66,7 @@ public class GameEventHandler
     while (updatedGame.Winner == null)
     {
       _logger.LogInformation($"[START] Starting next round.. {updatedGame.CurrentRound}");
-      updatedGame = await _gameService.NextRoundAsync(_logger, updatedGame);
+      updatedGame.NextRound();
       // to group only
       var messageData = BinaryData.FromString(JsonConvert.SerializeObject(updatedGame));
       await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, dataType));
