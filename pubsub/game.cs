@@ -48,7 +48,6 @@ public class Game
       case EventType.JOIN:
       case EventType.START:
         var group = gameEvent.EventType == EventType.JOIN ? gameEvent.Data?.Group : userContextService.Instance.Group;
-        logger.LogInformation($"[{userId}][{gameEvent.EventType.ToString()}] Group={group}");
         if (group == null) throw new Exception("Group id is required");
 
         var game = await _gameService.GetGameAsync(group);
