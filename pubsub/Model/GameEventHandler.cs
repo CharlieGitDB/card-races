@@ -57,7 +57,7 @@ public class GameEventHandler
     }
   }
 
-  public async Task HandleStartGame(WebPubSubDataType dataType, string group, GameEntry game)
+  public async Task HandleStartGame(string group, GameEntry game)
   {
     var updatedGame = await _gameService.StartGameAsync(game);
 
@@ -69,7 +69,7 @@ public class GameEventHandler
       updatedGame.NextRound();
       // to group only
       var messageData = BinaryData.FromString(JsonConvert.SerializeObject(updatedGame));
-      await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, dataType));
+      await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Text));
       _logger.LogInformation("[START] Round ended..");
       Thread.Sleep(5000);
     }

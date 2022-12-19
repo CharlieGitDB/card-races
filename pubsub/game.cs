@@ -1,10 +1,6 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Azure.WebJobs.Extensions.WebPubSub;
@@ -33,16 +29,13 @@ public class Game
   public async Task<UserEventResponse> Run(
       [WebPubSubTrigger("game", WebPubSubEventType.User, "message")] UserEventRequest request,
       BinaryData data,
-      WebPubSubDataType dataType, // is this needed?
       WebPubSubConnectionContext connectionContext,
       [WebPubSub(Hub = "game")] IAsyncCollector<WebPubSubAction> actions,
       ILogger logger)
   {
     _logger = logger;
-    _logger.LogInformation($"{dataType} .. datatype?");
-    _logger.LogInformation("is working");
     var (userId, userContextService, gameEvent, gameEventHandler) = Init(connectionContext, data, _gameService, actions);
-    _logger.LogInformation("is still working");
+
     switch (gameEvent.EventType)
     {
       case EventType.CREATE:
@@ -67,8 +60,7 @@ public class Game
         }
         else
         {
-          logger.LogInformation($"WHAT IS DATATYPE={JsonConvert.SerializeObject(dataType)}");
-          await gameEventHandler.HandleStartGame(dataType, group, game);
+          await gameEventHandler.HandleStartGame(group, game);
         }
         break;
       default:
@@ -78,7 +70,7 @@ public class Game
     // to all
     await actions.AddAsync(WebPubSubAction.CreateSendToAllAction(
         BinaryData.FromString($"[{userId}] To All! {data.ToString()}"),
-        dataType));
+        WebPubSubDataType.Text));
 
     var userEventResponse = new UserEventResponse
     {
