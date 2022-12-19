@@ -2,7 +2,7 @@ namespace PubSub.Model;
 
 public class GameConstants
 {
-  public static readonly string GAME_CONTEXT = "gameContext";
+  public static readonly string USER_CONTEXT = "UserContext";
 
   public static readonly string DATABASE = "cardraces";
 

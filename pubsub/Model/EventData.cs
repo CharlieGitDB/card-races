@@ -12,9 +12,9 @@ public class EventData
   [JsonPropertyName("suit")]
   public Suit? Suit { get; set; }
 
-  internal void Deconstruct(out string group, out Suit suit)
+  internal void Deconstruct(out string? group, out Suit? suit)
   {
-    group = Group!;
-    suit = (Suit)Suit!;
+    group = Group;
+    suit = Suit;
   }
 }

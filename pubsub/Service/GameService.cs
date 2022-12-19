@@ -1,5 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PubSub.Model;
 using PubSub.Util;
 
@@ -12,9 +17,12 @@ public class GameService
 
   private Container Container { get; set; }
 
-  public GameService(CosmosClient client)
+  private ILogger Logger;
+
+  public GameService(CosmosClient client, ILogger logger)
   {
     Client = client;
+    Logger = logger;
 
     var db = client.CreateDatabaseIfNotExistsAsync(GameConstants.DATABASE);
 
@@ -32,8 +40,8 @@ public class GameService
     var gameCreateResponse = await Container.CreateItemAsync(new GameEntry
     {
       Id = IdUtil.GenerateId(),
-      Users = new() { userId },
-      Suits = new() { suit }
+      UserData = new() { { userId, suit } },
+      PickedSuits = new() { suit }
     });
 
     return gameCreateResponse.Resource;
@@ -63,13 +71,42 @@ public class GameService
 
   public async Task<GameEntry> JoinGameAsync(string userId, Suit suit, GameEntry game)
   {
-    game.Users.Add(userId);
+    game.UserData.Add(userId, suit);
+    game.PickedSuits.Add(suit);
 
-    if (!game.Suits.Contains(suit))
+    return await UpdateGameAsync(game);
+  }
+
+  public async Task<GameEntry> StartGameAsync(GameEntry game)
+  {
+    game.Started = true;
+    return await UpdateGameAsync(game);
+  }
+
+  public async Task<GameEntry> NextRoundAsync(ILogger logger, GameEntry game)
+  {
+    game.CurrentRound = game.CurrentRound + 1;
+
+    Random random = new Random();
+    int randomIndex = random.Next(game.PickedSuits.Count);
+    Suit randomSuit = game.PickedSuits.ToArray()[randomIndex];
+
+    logger.LogInformation($"Picked suit {randomSuit.ToString()}");
+
+    var entry = game.Stats[randomSuit];
+    logger.LogInformation($"Entry from stats = {JsonConvert.SerializeObject(entry)}");
+    var updatedCount = entry + 1;
+
+    logger.LogInformation($"Current count {updatedCount}");
+
+    game.Stats[randomSuit] = updatedCount;
+
+    logger.LogInformation($"Game {JsonConvert.SerializeObject(game)}");
+
+    if (updatedCount == 10)
     {
-      game.Suits.Add(suit);
+      game.Winner = randomSuit;
     }
-
     return await UpdateGameAsync(game);
   }
 
@@ -77,5 +114,10 @@ public class GameService
   {
     var updateGameResponse = await Container.UpsertItemAsync<GameEntry>(game);
     return updateGameResponse.Resource;
+  }
+
+  public async Task DeleteGameAsync(string group)
+  {
+    var deleteGameResponse = await Container.DeleteItemAsync<GameEntry>(group, new PartitionKey(group));
   }
 }

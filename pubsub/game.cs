@@ -10,101 +10,98 @@ using Newtonsoft.Json;
 using Microsoft.Azure.WebJobs.Extensions.WebPubSub;
 using Microsoft.Azure.WebPubSub.Common;
 using PubSub.Model;
-using System.Collections.Generic;
 using Microsoft.Azure.Cosmos;
 using PubSub.Service;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using PubSub.Util;
-using System.Threading;
 
-namespace PubSub
+#nullable enable
+
+namespace PubSub;
+
+public class Game
 {
-  public class Game
+  private CosmosClient _cosmosClient;
+  private GameService _gameService;
+
+  private static ILogger? _logger;
+  public Game(CosmosClient cosmosClient, GameService gameService)
   {
-    private CosmosClient _cosmosClient;
-    private GameService _gameService;
+    _cosmosClient = cosmosClient;
+    _gameService = gameService;
+  }
 
-    public Game(CosmosClient cosmosClient, GameService gameService)
+  [FunctionName("game")]
+  public async Task<UserEventResponse> Run(
+      [WebPubSubTrigger("game", WebPubSubEventType.User, "message")] UserEventRequest request,
+      BinaryData data,
+      WebPubSubDataType dataType, // is this needed?
+      WebPubSubConnectionContext connectionContext,
+      [WebPubSub(Hub = "game")] IAsyncCollector<WebPubSubAction> actions,
+      ILogger logger)
+  {
+    _logger = logger;
+    _logger.LogInformation($"{dataType} .. datatype?");
+    _logger.LogInformation("is working");
+    var (userId, userContextService, gameEvent, gameEventHandler) = Init(connectionContext, data, _gameService, actions);
+    _logger.LogInformation("is still working");
+    switch (gameEvent.EventType)
     {
-      _cosmosClient = cosmosClient;
-      _gameService = gameService;
-    }
+      case EventType.CREATE:
+        var suit = gameEvent.Data?.Suit;
+        if (suit == null) throw new Exception("Suit is required");
 
-    [FunctionName("game")]
-    public async Task<UserEventResponse> Run(
-        [WebPubSubTrigger("game", WebPubSubEventType.User, "message")] UserEventRequest request,
-        BinaryData data,
-        WebPubSubDataType dataType,
-        WebPubSubConnectionContext connectionContext,
-        [WebPubSub(Hub = "game")] IAsyncCollector<WebPubSubAction> actions,
-        ILogger logger)
-    {
-      var userId = request.ConnectionContext.UserId;
+        _logger.LogInformation("Creating game..");
+        await gameEventHandler.HandleCreateGame(userId, (Suit)suit);
+        break;
+      case EventType.JOIN:
+      case EventType.START:
+        var group = gameEvent.EventType == EventType.JOIN ? gameEvent.Data?.Group : userContextService.Instance.Group;
+        logger.LogInformation($"[{userId}][{gameEvent.EventType.ToString()}] Group={group}");
+        if (group == null) throw new Exception("Group id is required");
 
-      var gameContextService = new GameContextService(connectionContext);
-      logger.LogInformation($"[{userId}][GAME CONTEXT] [{JsonConvert.SerializeObject(gameContextService)}]");
-
-      var gameEvent = data.ToObjectFromJson<GameEvent>();
-      logger.LogInformation($"[{userId}][GAME EVENT] [{JsonConvert.SerializeObject(gameEvent)}]");
-
-      if (gameEvent.EventType == EventType.CREATE)
-      {
-        var suit = (Suit)gameEvent.Data.Suit;
-        var createdGame = await _gameService.CreateGameAsync(userId, suit);
-        logger.LogInformation($"[{userId}][CREATE] Created game! [{JsonConvert.SerializeObject(createdGame)}]");
-        gameContextService.UpdateGameContext(createdGame.Id, suit);
-        await actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, createdGame.Id));
-      }
-      else if (gameEvent.EventType == EventType.JOIN)
-      {
-        var (group, suit) = gameEvent.Data;
         var game = await _gameService.GetGameAsync(group);
-        if (game == null)
+        if (game == null) throw new Exception("Cannot find game");
+
+        if (gameEvent.EventType == EventType.JOIN)
         {
-          throw new Exception($"Game id ${group} is invalid");
+          await gameEventHandler.HandleJoinGame(userId, game);
         }
-
-        var updatedGame = await _gameService.JoinGameAsync(userId, suit, game);
-        logger.LogInformation($"[{userId}][JOIN] Joined game [{JsonConvert.SerializeObject(updatedGame)}]");
-        gameContextService.UpdateGameContext(updatedGame.Id, suit);
-
-        await actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, updatedGame.Id));
-      }
-      else if (gameEvent.EventType == EventType.START)
-      {
-        logger.LogInformation("[{userId}][START] Starting game..");
-        // to group only
-        var group = gameContextService.Instance.Group;
-        var messageData = BinaryData.FromString($"[{userId}] Group only!");
-        await actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, dataType));
-
-        Thread.Sleep(10000);
-        await actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(
-          gameContextService.Instance.Group,
-          BinaryData.FromString($"[{userId}] First move!"),
-          dataType
-        ));
-      }
-      else
-      {
+        else
+        {
+          logger.LogInformation($"WHAT IS DATATYPE={JsonConvert.SerializeObject(dataType)}");
+          await gameEventHandler.HandleStartGame(dataType, group, game);
+        }
+        break;
+      default:
         throw new Exception("Invalid event");
-      }
-
-      // // to all
-      await actions.AddAsync(WebPubSubAction.CreateSendToAllAction(
-          BinaryData.FromString($"[{userId}] To All! {data.ToString()}"),
-          dataType));
-
-      var userEventResponse = new UserEventResponse
-      {
-        Data = BinaryData.FromString("[SYSTEM] General Response"),
-        DataType = WebPubSubDataType.Text,
-      };
-
-      userEventResponse.SetState(GameConstants.GAME_CONTEXT, gameContextService.Instance);
-
-      return userEventResponse;
     }
+
+    // to all
+    await actions.AddAsync(WebPubSubAction.CreateSendToAllAction(
+        BinaryData.FromString($"[{userId}] To All! {data.ToString()}"),
+        dataType));
+
+    var userEventResponse = new UserEventResponse
+    {
+      Data = BinaryData.FromString("[SYSTEM] General Response"),
+      DataType = WebPubSubDataType.Text,
+    };
+    userEventResponse.SetState(GameConstants.USER_CONTEXT, userContextService.Instance);
+
+    return userEventResponse;
+  }
+
+  private static (string userId, UserContextService, GameEvent, GameEventHandler) Init(WebPubSubConnectionContext connectionContext, BinaryData data, GameService gameService, IAsyncCollector<WebPubSubAction> actions)
+  {
+    var userId = connectionContext.UserId;
+
+    var userContextService = new UserContextService(connectionContext);
+    _logger.LogInformation($"[{userId}][USER CONTEXT] |{JsonConvert.SerializeObject(userContextService.Instance)}|");
+
+    var gameEvent = data.ToObjectFromJson<GameEvent>();
+    _logger.LogInformation($"[{userId}][GAME EVENT] |{JsonConvert.SerializeObject(gameEvent)}|");
+
+    var gameEventHandler = new GameEventHandler(_logger, actions, userContextService, gameService, gameEvent);
+
+    return (userId, userContextService, gameEvent, gameEventHandler);
   }
 }
