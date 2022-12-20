@@ -71,7 +71,7 @@ public class GameEventHandler
       var messageData = BinaryData.FromString(JsonConvert.SerializeObject(updatedGame));
       await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Text));
       _logger.LogInformation("[START] Round ended..");
-      Thread.Sleep(3500);
+      Thread.Sleep(2800);
     }
 
     var declareWinner = updatedGame.GetWinningUsers((Suit)updatedGame.Winner);
