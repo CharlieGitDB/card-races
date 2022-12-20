@@ -4,5 +4,7 @@ public enum EventType
 {
   CREATE,
   JOIN,
-  START
+  START,
+  WINNER,
+  REPLAY
 }

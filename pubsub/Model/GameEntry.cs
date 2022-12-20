@@ -30,7 +30,6 @@ public class GameEntry
   [JsonPropertyName("currentRound")]
   public int CurrentRound { get; set; }
 
-
   public void NextRound()
   {
     CurrentRound = CurrentRound + 1;
@@ -46,6 +45,16 @@ public class GameEntry
     {
       Winner = randomSuit;
     }
+  }
+
+  public Dictionary<string, Suit> GetWinningUsers(Suit winningSuit)
+  {
+    var userData = UserData
+      .ToList()
+      .Where(entry => entry.Value == winningSuit)
+      .ToDictionary(entry => entry.Key, entry => entry.Value);
+
+    return userData;
   }
 
   private static Dictionary<Suit, int> InitStats()

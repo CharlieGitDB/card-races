@@ -74,6 +74,12 @@ public class GameEventHandler
       Thread.Sleep(3500);
     }
 
+    var declareWinner = updatedGame.GetWinningUsers((Suit)updatedGame.Winner);
+    _logger.LogInformation($"[START] |{JsonConvert.SerializeObject(declareWinner)}|");
+
+    var winnerData = BinaryData.FromString(JsonConvert.SerializeObject(declareWinner));
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, winnerData, WebPubSubDataType.Text));
+
     _logger.LogInformation("[START] Game Finished");
     _logger.LogInformation("[START] Deleting game..");
     await _gameService.DeleteGameAsync(updatedGame.Id);
