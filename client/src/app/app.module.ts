@@ -16,6 +16,7 @@ import { PlayerListComponent } from './lobby/components/player-list/player-list.
 import { LobbyPageComponent } from './lobby/containers/lobby-page/lobby-page.component';
 import { StartComponent } from './lobby/components/start/start.component';
 import { GamePageComponent } from './game/containers/game-page/game-page.component';
+import { CardComponent } from './game/components/card/card.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { GamePageComponent } from './game/containers/game-page/game-page.compone
     PlayerListComponent,
     StartComponent,
     GamePageComponent,
+    CardComponent,
   ],
   imports: [
     BrowserModule,
