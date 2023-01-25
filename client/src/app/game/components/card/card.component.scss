@@ -7,7 +7,7 @@
 .card {
   height: 100%;
   width: 100%;
-  border: 1px solid black;
+  border: 1px solid red;
   border-radius: 5px;
   transition: transform 1s;
   transform-style: preserve-3d;
@@ -21,12 +21,7 @@
   backface-visibility: hidden;
 }
 
-.front {
-  background: red;
-}
-
 .back {
-  background: blue;
   transform: rotateY(180deg);
 }
 

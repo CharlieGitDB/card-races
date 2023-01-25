@@ -7,6 +7,7 @@
 }
 
 app-card {
-  height: 400px;
-  width: 200px;
+  $height: 400px;
+  height: $height;
+  width: calc(#{$height} / 1.42);
 }
