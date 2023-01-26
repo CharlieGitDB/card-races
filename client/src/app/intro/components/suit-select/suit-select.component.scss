@@ -1,0 +1,50 @@
+@use 'src/variables' as vars;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.suits {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 200px;
+}
+
+.card {
+  height: 100%;
+  width: 100%;
+}
+
+.card:hover {
+  background: red;
+}
+
+.spades {
+  background: url(/assets/spades.svg) no-repeat;
+  background-size: contain;
+  background-position: center;
+
+}
+
+.clubs {
+  background: url(/assets/clubs.svg) no-repeat;
+  background-size: contain;
+  background-position: center;
+
+}
+
+.diamonds {
+  background: url(/assets/diamonds.svg) no-repeat;
+  background-size: contain;
+  background-position: center;
+
+}
+
+.hearts {
+  background: url(/assets/hearts.svg) no-repeat;
+  background-size: contain;
+  background-position: center;
+}

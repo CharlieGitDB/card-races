@@ -12,11 +12,12 @@ import { NotFoundPageComponent } from './shared/containers/not-found-page/not-fo
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
-import { PlayerListComponent } from './lobby/components/player-list/player-list.component';
-import { LobbyPageComponent } from './lobby/containers/lobby-page/lobby-page.component';
-import { StartComponent } from './lobby/components/start/start.component';
-import { GamePageComponent } from './game/containers/game-page/game-page.component';
 import { CardComponent } from './game/components/card/card.component';
+import { GamePageComponent } from './game/containers/game-page/game-page.component';
+import { SuitSelectComponent } from './intro/components/suit-select/suit-select.component';
+import { PlayerListComponent } from './lobby/components/player-list/player-list.component';
+import { StartComponent } from './lobby/components/start/start.component';
+import { LobbyPageComponent } from './lobby/containers/lobby-page/lobby-page.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { CardComponent } from './game/components/card/card.component';
     StartComponent,
     GamePageComponent,
     CardComponent,
+    SuitSelectComponent,
   ],
   imports: [
     BrowserModule,
