@@ -5,30 +5,85 @@
         <p></p>
         <input id="message" placeholder="Type to chat...">
         <div id="messages"></div>
+        <button id="create">Create</button>
+        <button id="join">Join</button>
+        <button id="start">Start</button>
         <script>
             (async function () {
-                var genNum = (n) => {
-                  return Math.floor(Math.random() * (9 * (Math.pow(10, n)))) + (Math.pow(10, n));
-                }
+                var sendMessage = (d) => ws.send(JSON.stringify(d));
+                var genNum = (n) => Math.floor(Math.random() * (9 * (Math.pow(10, n)))) + (Math.pow(10, n));
+                
                 // negotiate
                 let messages = document.querySelector('#messages');
                 let res = await fetch(`${window.location.origin}/api/negotiate?username=${genNum(5)}`, {
                     credentials: "include"
                 });
                 let url = await res.json();
+
                 // connect
+                console.log(url, 'url??');
                 let ws = new WebSocket(url.url);
+                ws.onerror = (e) => console.log(e, 'error?');
                 ws.onopen = () => console.log('connected');
                 ws.onmessage = event => {
                     let m = document.createElement('p');
                     m.innerText = event.data;
                     messages.appendChild(m);
                 };
+
+                const EVENT_TYPE = {
+                    CREATE: 0,
+                    JOIN: 1,
+                    START: 2
+                }
+
+                const SUIT = {
+                    HEART: 0,
+                    DIAMOND: 1,
+                    CLUB: 2,
+                    SPADE: 3
+                }
+                
                 let message = document.querySelector('#message');
                 message.addEventListener('keypress', e => {
                     if (e.charCode !== 13) return;
-                    ws.send(message.value);
+
+                    sendMessage({
+                        eventType: EVENT_TYPE.CREATE,
+                        data: {
+                            group: message.value,
+                            suit: SUIT.HEART
+                        }
+                    });
                     message.value = '';
+                });
+
+                const create = document.getElementById('create');
+                create.addEventListener('click', () => {
+                    sendMessage({
+                        eventType: EVENT_TYPE.CREATE,
+                        data: {
+                            suit: SUIT.HEART
+                        }
+                    });
+                });
+                
+                const start = document.getElementById('start');
+                start.addEventListener('click', () => {
+                    sendMessage({
+                        eventType: EVENT_TYPE.START
+                    });
+                });
+
+                const join = document.getElementById('join');
+                join.addEventListener('click', () => {
+                    sendMessage({
+                        eventType: EVENT_TYPE.JOIN,
+                        data: {
+                            group: message.value,
+                            suit: SUIT.DIAMOND
+                        }
+                    });
                 });
             })();
         </script>
