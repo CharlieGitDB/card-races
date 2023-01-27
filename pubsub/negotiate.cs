@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.WebJobs.Extensions.WebPubSub;
 
-namespace pubsub
+namespace PubSub
 {
-  public static class negotiate
+  public static class Negotiate
   {
     [FunctionName("negotiate")]
     public static WebPubSubConnection Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-        [WebPubSubConnection(Hub = "simplechat", UserId = "{query.username}")] WebPubSubConnection connection,
+        [WebPubSubConnection(Hub = "game", UserId = "{query.username}")] WebPubSubConnection connection,
         ILogger log)
     {
       log.LogInformation("Connecting...");
