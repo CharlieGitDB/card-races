@@ -1,4 +1,15 @@
 <p class="mat-headline-4">Card Races</p>
-<app-suit-select></app-suit-select>
-<app-create></app-create>
-<app-join></app-join>
+
+<ng-container>
+  <app-suit-select
+    [selectedSuit]="selectedSuit"
+    (selectSuit)="selectSuit($event)"
+  ></app-suit-select>
+</ng-container>
+
+<ng-container *ngIf="selectedSuit">
+  <div class="create-game" [@showOptions]>
+    <app-create></app-create>
+    <app-join></app-join>
+  </div>
+</ng-container>

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SUIT } from 'src/app/shared/types/Suit';
 
 @Component({
   selector: 'app-card',
@@ -6,6 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./card.component.scss'],
 })
 export class CardComponent {
+  public SUIT: typeof SUIT = SUIT;
+
   public flip = false;
 
   flipIt() {

@@ -9,42 +9,29 @@
 .suits {
   display: flex;
   flex-direction: row;
-  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  width: 50vw;
   height: 200px;
 }
 
 .card {
   height: 100%;
   width: 100%;
+  padding: vars.$small-spacing;
+
+  img {
+    height: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
 }
 
-.card:hover {
-  background: red;
-}
-
-.spades {
-  background: url(/assets/spades.svg) no-repeat;
-  background-size: contain;
-  background-position: center;
-
-}
-
-.clubs {
-  background: url(/assets/clubs.svg) no-repeat;
-  background-size: contain;
-  background-position: center;
-
-}
-
-.diamonds {
-  background: url(/assets/diamonds.svg) no-repeat;
-  background-size: contain;
-  background-position: center;
-
-}
-
-.hearts {
-  background: url(/assets/hearts.svg) no-repeat;
-  background-size: contain;
-  background-position: center;
+.selected {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px vars.$light-grey;
 }
