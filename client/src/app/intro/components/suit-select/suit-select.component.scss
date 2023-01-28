@@ -1,5 +1,9 @@
 @use 'src/variables' as vars;
 
+@mixin grow {
+  transform: scale(1.05);
+}
+
 :host {
   display: flex;
   flex-direction: column;
@@ -28,12 +32,12 @@
     border-radius: 5px;
 
     &:hover {
-      transform: scale(1.05);
+      @include grow;
     }
   }
 }
 
 .selected {
-  transform: scale(1.05);
+  @include grow;
   box-shadow: 0 0 8px vars.$light-grey;
 }

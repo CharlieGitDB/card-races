@@ -1,15 +1,14 @@
-<p class="mat-headline-4">Card Races</p>
+<p class="mat-headline-5">{{ 'Card Races' | uppercase }}</p>
 
-<ng-container>
-  <app-suit-select
-    [selectedSuit]="selectedSuit"
-    (selectSuit)="selectSuit($event)"
-  ></app-suit-select>
-</ng-container>
+<app-suit-select
+  [selectedSuit]="selectedSuit"
+  (selectSuit)="selectSuit($event)"
+></app-suit-select>
 
-<ng-container *ngIf="selectedSuit">
-  <div class="create-game" [@showOptions]>
-    <app-create></app-create>
-    <app-join></app-join>
-  </div>
-</ng-container>
+<div
+  class="game-options"
+  [@showOptions]="selectedSuit ? 'show' : 'hide'"
+>
+  <app-create></app-create>
+  <app-join></app-join>
+</div>
