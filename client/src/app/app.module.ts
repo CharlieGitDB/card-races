@@ -18,6 +18,7 @@ import { SuitSelectComponent } from './intro/components/suit-select/suit-select.
 import { PlayerListComponent } from './lobby/components/player-list/player-list.component';
 import { StartComponent } from './lobby/components/start/start.component';
 import { LobbyPageComponent } from './lobby/containers/lobby-page/lobby-page.component';
+import { BoardComponent } from './game/components/board/board.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { LobbyPageComponent } from './lobby/containers/lobby-page/lobby-page.com
     GamePageComponent,
     CardComponent,
     SuitSelectComponent,
+    BoardComponent,
   ],
   imports: [
     BrowserModule,
