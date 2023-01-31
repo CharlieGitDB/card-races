@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SUIT } from 'src/app/shared/types/Suit';
+import { SUIT } from 'src/app/data/types/Suit';
 
 @Component({
   selector: 'app-card',

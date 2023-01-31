@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SUIT, Suit } from 'src/app/shared/types/Suit';
+import { SUIT, Suit } from 'src/app/data/types/Suit';
 
 @Component({
   selector: 'app-board',

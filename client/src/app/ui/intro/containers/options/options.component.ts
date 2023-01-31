@@ -6,7 +6,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component } from '@angular/core';
-import { Suit } from 'src/app/shared/types/Suit';
+import { Suit } from 'src/app/data/types/Suit';
 
 const SHOW_OPTIONS = trigger('showOptions', [
   state(

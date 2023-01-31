@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Suit, suitList } from 'src/app/shared/types/Suit';
+import { Suit, suitList } from 'src/app/data/types/Suit';
 
 @Component({
   selector: 'app-suit-select',
