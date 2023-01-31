@@ -2,11 +2,6 @@
   <img
     class="card"
     [src]="'/assets/'+ suit.key + '.svg'"
-    [ngStyle]="{
-      'grid-column-start': i + 1,
-      'grid-column-end': i + 1,
-      'grid-row-start': suit.value,
-      'grid-row-end': suit.value
-    }"
+    [ngStyle]="{ 'grid-column': i + 1, 'grid-row': suit.value }"
   />
 </ng-container>

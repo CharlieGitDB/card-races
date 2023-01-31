@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Suit } from 'src/app/shared/types/Suit';
+import { SUIT, Suit } from 'src/app/shared/types/Suit';
 
 @Component({
   selector: 'app-board',
@@ -8,6 +8,7 @@ import { Suit } from 'src/app/shared/types/Suit';
 })
 export class BoardComponent implements OnInit {
   public clock: any;
+  public pieceToMove: Suit | null = null;
   public board: Record<Suit, number> = {
     SPADES: 10,
     HEARTS: 10,
@@ -22,6 +23,7 @@ export class BoardComponent implements OnInit {
   public tick = () => {
     if (this.board.SPADES !== 1) {
       this.board.SPADES--;
+      this.pieceToMove = SUIT.SPADES;
     } else {
       clearInterval(this.clock);
     }
