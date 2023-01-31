@@ -1,0 +1,14 @@
+<p class="mat-headline-5">{{ 'Card Races' | uppercase }}</p>
+
+<app-suit-select
+  [selectedSuit]="selectedSuit"
+  (selectSuit)="selectSuit($event)"
+></app-suit-select>
+
+<div
+  class="game-options"
+  [@showOptions]="selectedSuit ? 'show' : 'hide'"
+>
+  <app-create></app-create>
+  <app-join></app-join>
+</div>

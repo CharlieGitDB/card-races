@@ -1,0 +1,43 @@
+@use 'src/variables' as vars;
+
+@mixin grow {
+  transform: scale(1.05);
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.suits {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 75vw;
+  height: 200px;
+}
+
+.card {
+  $hundredMinusPadding: calc(100% - #{vars.$tiny-spacing});
+  height: $hundredMinusPadding;
+  width: $hundredMinusPadding;
+  padding: vars.$tiny-spacing;
+
+  img {
+    max-height: 100%;
+    max-width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+      @include grow;
+    }
+  }
+}
+
+.selected {
+  @include grow;
+  box-shadow: 0 0 8px vars.$light-grey;
+}

@@ -1,0 +1,7 @@
+<ng-container *ngFor="let suit of board | keyvalue; let i = index">
+  <img
+    class="card"
+    [src]="'/assets/'+ suit.key + '.svg'"
+    [ngStyle]="{ 'grid-column': i + 1, 'grid-row': suit.value }"
+  />
+</ng-container>
