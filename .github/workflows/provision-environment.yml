@@ -69,6 +69,6 @@ jobs:
       resourcegroup-location: ${{ inputs.resourcegroup-location }}
       functionapp-name: ${{ inputs.environment }}-functionapp
       pubsub-name: ${{ inputs.environment }}-pubsub
-      cosmosdb-name: ${{ inputs.environmnet }}-cosmosdb
+      cosmosdb-name: ${{ inputs.environmnet }}-cardraces-db
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
