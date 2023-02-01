@@ -15,6 +15,9 @@ on:
       pubsub-name:
         required: true
         type: string
+      cosmosdb-name:
+        required: true
+        type: string
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -49,3 +52,7 @@ jobs:
       - name: Set web pubsub connectionstring as application setting
         run: |
           az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings WebPubSubConnectionString=$(az webpubsub key show -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --query primaryConnectionString --output tsv) --output none
+
+      - name: Set cosmosdb connectionstring as application setting
+        run: |
+          az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings CosmosDbConnectionString=$(az cosmosdb keys list --type connection-strings -n ${{ inputs.cosmosdb-name }} -g ${{ inputs.resourcegroup }} --query connectionStrings[0].connectionString --output tsv) --output none

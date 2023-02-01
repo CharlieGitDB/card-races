@@ -1,0 +1,27 @@
+name: Provision CosmosDB
+
+on:
+  workflow_call:
+    inputs:
+      resourcegroup:
+        required: true
+        type: string
+      cosmos-db-account:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+
+jobs:
+  provision-cosmosdb-account:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create CosmosDB account
+        run: |
+          az cosmosdb create --name ${{ inputs.cosmos-db-account }} --resource-group ${{ inputs.resourcegroup }}
