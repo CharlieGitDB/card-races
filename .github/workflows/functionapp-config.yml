@@ -15,7 +15,7 @@ on:
       pubsub-name:
         required: true
         type: string
-      cosmosdb-name:
+      cosmos-db-account:
         required: true
         type: string
     secrets:
@@ -53,6 +53,10 @@ jobs:
         run: |
           az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings WebPubSubConnectionString=$(az webpubsub key show -n ${{ inputs.pubsub-name }} -g ${{ inputs.resourcegroup }} --query primaryConnectionString --output tsv) --output none
 
+      - name: Does a string come back?
+        run: |
+          az cosmosdb keys list --type connection-strings -n ${{ inputs.cosmos-db-account }} -g ${{ inputs.resourcegroup }} --query connectionStrings[0].connectionString --output tsv
+
       - name: Set cosmosdb connectionstring as application setting
         run: |
-          az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings CosmosDbConnectionString=$(az cosmosdb keys list --type connection-strings -n ${{ inputs.cosmosdb-name }} -g ${{ inputs.resourcegroup }} --query connectionStrings[0].connectionString --output tsv) --output none
+          az functionapp config appsettings set -n ${{ env.FUNCTIONAPP_NAME }} -g ${{ inputs.resourcegroup }} --settings CosmosDbConnectionString=$(az cosmosdb keys list --type connection-strings -n ${{ inputs.cosmos-db-account }} -g ${{ inputs.resourcegroup }} --query connectionStrings[0].connectionString --output tsv) --output none
