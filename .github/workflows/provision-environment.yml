@@ -46,13 +46,29 @@ jobs:
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
+  provision-cosmosdb:
+    needs: provision-resourcegroup
+    uses: ./.github/workflows/cosmosdb-config.yml
+    with:
+      resourcegroup: ${{ inputs.environment }}-cardraces-rg
+      cosmos-db-account: ${{ inputs.environment }}-cardraces-db
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
   provision-functionapp:
-    needs: [provision-resourcegroup, provision-pubsub, provision-storage]
+    needs:
+      [
+        provision-resourcegroup,
+        provision-pubsub,
+        provision-storage,
+        provision-cosmosdb,
+      ]
     uses: ./.github/workflows/functionapp-config.yml
     with:
       resourcegroup: ${{ inputs.environment }}-cardraces-rg
       resourcegroup-location: ${{ inputs.resourcegroup-location }}
       functionapp-name: ${{ inputs.environment }}-functionapp
       pubsub-name: ${{ inputs.environment }}-pubsub
+      cosmos-db-account: ${{ inputs.environment }}-cardraces-db
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
