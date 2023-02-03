@@ -1,0 +1,56 @@
+name: Build and deploy angular app
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "client/**"
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+
+env:
+  ANGULAR_APP_PATH: "client" # set this to the path to your web app project, defaults to the repository root
+  BASE_RG_NAME: cardraces
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set default deploy environment
+        run: |
+          if [ -z "${{ inputs.environment }}" ]
+          then
+            echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set resource group environment name
+        run: |
+          echo "RESOURCEGROUP_NAME=${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-rg" >> $GITHUB_ENV
+
+      - name: Create static webapp in azure (if it does not exist)
+        run: |
+          az staticwebapp create -n ${{ inputs.app-name }} -g ${{ env.RESOURCEGROUP_NAME }}
+
+      - name: Set staticwebapp secret
+        run: |
+          echo ::add-mask::$(az staticwebapp secrets list -n ${{ inputs.app-name }} -n ${{ env.RESOURCEGROUP_NAME }} --query properties.key --output tsv)
+          echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n ${{ inputs.app-name }} -n ${{ env.RESOURCEGROUP_NAME }} --query properties.key --output tsv)" >> $GITHUB_ENV
+
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ env.STATICWEBAPP_TOKEN }}
+          action: "upload"
+          app_location: "/client" # App source code path
