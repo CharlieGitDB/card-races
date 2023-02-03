@@ -40,17 +40,24 @@ jobs:
 
       - name: Create static webapp in azure (if it does not exist)
         run: |
-          az staticwebapp create -n ${{ inputs.app-name }} -g ${{ env.RESOURCEGROUP_NAME }}
+          az staticwebapp create -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" -g ${{ env.RESOURCEGROUP_NAME }}
 
-      - name: Set staticwebapp secret
+      - name: Set staticwebapp token
         run: |
-          echo ::add-mask::$(az staticwebapp secrets list -n ${{ inputs.app-name }} -n ${{ env.RESOURCEGROUP_NAME }} --query properties.key --output tsv)
-          echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n ${{ inputs.app-name }} -n ${{ env.RESOURCEGROUP_NAME }} --query properties.key --output tsv)" >> $GITHUB_ENV
+          echo ::add-mask::$(az staticwebapp secrets list -n "${{ env.RESOURCEGROUP_NAME }}-staticwebapp" --query properties.apiKey --output tsv)
+          echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n "${{ env.RESOURCEGROUP_NAME }}-staticwebapp" --query properties.apiKey --output tsv)" >> $GITHUB_ENV
 
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ env.STATICWEBAPP_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
           action: "upload"
           app_location: "/client" # App source code path
+          output_location: "/dist/client" # dist folder, unsure if this works yet
+
+
+      # - name: Create static webapp in azure (if it does not exist)
+      #   run: |
+      #     az staticwebapp create -n ${{ inputs.environment }}-${{ env.BASE_RG_NAME }}-staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} -s https://github.com/charliegitdb/card-races -l ${{ env.DEPLOY_LOCATION }} -b main -t ${{ secrets.GITHUB_PAT }}
