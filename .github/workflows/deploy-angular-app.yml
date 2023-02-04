@@ -1,0 +1,68 @@
+name: Build and deploy angular app
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "client/**"
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+
+env:
+  ANGULAR_APP_PATH: "client" # set this to the path to your web app project, defaults to the repository root
+  BASE_RG_NAME: cardraces
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set default deploy environment
+        run: |
+          if [ -z "${{ inputs.environment }}" ]
+          then
+            echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set resource group environment name
+        run: |
+          echo "RESOURCEGROUP_NAME=${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-rg" >> $GITHUB_ENV
+
+      - name: Create static webapp in azure (if it does not exist)
+        run: |
+          az staticwebapp create -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" -g ${{ env.RESOURCEGROUP_NAME }}
+
+      - name: Set functionapp endpoint in angular environment
+        run: |
+          FUNCTIONAPP_HOSTNAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].defaultHostName --output tsv)
+          echo "export const environment = { functionAppUrl: '$FUNCTIONAPP_HOSTNAME' };" > ./client/src/environments/environment.ts
+
+      - name: Set staticwebapp token
+        run: |
+          echo ::add-mask::$(az staticwebapp secrets list -n "${{ env.RESOURCEGROUP_NAME }}-staticwebapp" --query properties.apiKey --output tsv)
+          echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n "${{ env.RESOURCEGROUP_NAME }}-staticwebapp" --query properties.apiKey --output tsv)" >> $GITHUB_ENV
+
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ env.STATICWEBAPP_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
+          action: "upload"
+          app_location: "/client" # App source code path
+          output_location: "/dist/client" # dist folder, unsure if this works yet
+
+
+      # - name: Create static webapp in azure (if it does not exist)
+      #   run: |
+      #     az staticwebapp create -n ${{ inputs.environment }}-${{ env.BASE_RG_NAME }}-staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} -s https://github.com/charliegitdb/card-races -l ${{ env.DEPLOY_LOCATION }} -b main -t ${{ secrets.GITHUB_PAT }}
