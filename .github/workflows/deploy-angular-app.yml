@@ -61,8 +61,3 @@ jobs:
           action: "upload"
           app_location: "/client" # App source code path
           output_location: "/dist/client" # dist folder, unsure if this works yet
-
-
-      # - name: Create static webapp in azure (if it does not exist)
-      #   run: |
-      #     az staticwebapp create -n ${{ inputs.environment }}-${{ env.BASE_RG_NAME }}-staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} -s https://github.com/charliegitdb/card-races -l ${{ env.DEPLOY_LOCATION }} -b main -t ${{ secrets.GITHUB_PAT }}
