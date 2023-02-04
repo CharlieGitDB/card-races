@@ -45,7 +45,8 @@ jobs:
       - name: Set functionapp endpoint in angular environment
         run: |
           FUNCTIONAPP_HOSTNAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].defaultHostName --output tsv)
-          echo "export const environment = { functionAppUrl: '$FUNCTIONAPP_HOSTNAME' };" > ./client/src/environments/environment.ts
+          FUNCTIONAPP_URL="$FUNCTIONAPP_HOSTNAME/api"
+          echo "export const environment = { functionAppUrl: '$FUNCTIONAPP_URL' };" > ./client/src/environments/environment.ts
 
       - name: Set staticwebapp token
         run: |
@@ -61,3 +62,8 @@ jobs:
           action: "upload"
           app_location: "/client" # App source code path
           output_location: "/dist/client" # dist folder, unsure if this works yet
+
+      - name: Set the functionapp's cors rules to allow the angular app
+        run: |
+          FUNCTIONAPP_NAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].name --output tsv)
+          az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins $(az staticwebapp show -n ${{ env.RESOURCEGROUP_NAME }}-staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} --query defaultHostname --output tsv)
