@@ -1,3 +1,3 @@
 export const environment = {
-  functionAppUrl: 'https://localhost:9001',
+  functionAppUrl: 'https://dev-functionapp29756.azurewebsites.net/api',
 };

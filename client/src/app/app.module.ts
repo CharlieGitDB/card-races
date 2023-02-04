@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +13,8 @@ import { NotFoundPageComponent } from './ui/shared/containers/not-found-page/not
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { BASE_API_URL_KEY } from '@constants/constants';
+import { environment } from 'src/environments/environment';
 import { BoardComponent } from './ui/game/components/board/board.component';
 import { CardComponent } from './ui/game/components/card/card.component';
 import { GamePageComponent } from './ui/game/containers/game-page/game-page.component';
@@ -42,8 +45,14 @@ import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.
     BrowserAnimationsModule,
     MatButtonModule,
     MatListModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: BASE_API_URL_KEY,
+      useValue: environment.functionAppUrl,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
