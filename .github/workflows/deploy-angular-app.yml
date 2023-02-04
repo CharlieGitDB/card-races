@@ -42,6 +42,11 @@ jobs:
         run: |
           az staticwebapp create -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" -g ${{ env.RESOURCEGROUP_NAME }}
 
+      - name: Set functionapp endpoint in angular environment
+        run: |
+          FUNCTIONAPP_HOSTNAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].defaultHostName --output tsv)
+          echo "export const environment = { functionAppUrl: '$FUNCTIONAPP_HOSTNAME' };" > ./client/src/environments/environment.ts
+
       - name: Set staticwebapp token
         run: |
           echo ::add-mask::$(az staticwebapp secrets list -n "${{ env.RESOURCEGROUP_NAME }}-staticwebapp" --query properties.apiKey --output tsv)
