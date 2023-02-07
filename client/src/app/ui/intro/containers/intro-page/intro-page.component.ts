@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GameService, NegotiateService } from '@services/services';
 import { lastValueFrom } from 'rxjs';
-import { SUIT } from 'src/app/data/types/Suit';
 
 @Component({
   selector: 'app-intro-page',
@@ -17,10 +16,9 @@ export class IntroPageComponent implements OnInit {
     const connectionInfo = await lastValueFrom(request$);
 
     this.gameService.connect(connectionInfo.url);
-    this.gameService.createGame(SUIT.CLUBS);
 
     this.gameService.info$.subscribe((data) => {
-      console.log(data, 'data');
+      console.log(data, 'from intro');
     });
   }
 }

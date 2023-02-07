@@ -28,7 +28,25 @@ export class GameService {
   private messageSubject$ = new Subject<any>();
   private messages$ = this.messageSubject$.pipe(switchAll());
 
-  public gameData$ = this.messages$.pipe(
+  public createdGame$ = this.messages$.pipe(
+    map((res) => res as Response),
+    filter((res) => res.eventType === EVENT_TYPE.CREATED),
+    map((res) => ({
+      ...res,
+      data: res.data as GameEntry,
+    }))
+  );
+
+  public joinedGame$ = this.messages$.pipe(
+    map((res) => res as Response),
+    filter((res) => res.eventType === EVENT_TYPE.JOINED),
+    map((res) => ({
+      ...res,
+      data: res.data as GameEntry,
+    }))
+  );
+
+  public nextRound$ = this.messages$.pipe(
     map((res) => res as Response),
     filter((res) => res.eventType === EVENT_TYPE.ADVANCE),
     map((res) => ({

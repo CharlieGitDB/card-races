@@ -1,6 +1,8 @@
 export type EventType =
   | 'CREATE'
+  | 'CREATED'
   | 'JOIN'
+  | 'JOINED'
   | 'START'
   | 'ADVANCE'
   | 'WINNER'
@@ -9,7 +11,9 @@ export type EventType =
 
 export const EVENT_TYPE: Record<EventType, EventType> = {
   CREATE: 'CREATE',
+  CREATED: 'CREATED',
   JOIN: 'JOIN',
+  JOINED: 'JOINED',
   START: 'START',
   ADVANCE: 'ADVANCE',
   WINNER: 'WINNER',

@@ -9,6 +9,6 @@
   class="game-options"
   [@showOptions]="selectedSuit ? 'show' : 'hide'"
 >
-  <app-create></app-create>
+  <app-create [selectedSuit]="selectedSuit"></app-create>
   <app-join></app-join>
 </div>
