@@ -33,6 +33,15 @@ public class GameEventHandler
     _userContextService.UpdateGameContext(createdGame.Id, suit);
     _logger.LogInformation($"[{userId}][CREATE] Created game! |{JsonConvert.SerializeObject(createdGame)}|");
     await _actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, createdGame.Id));
+
+    var createdGameResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.CREATED,
+      Data = createdGame
+    };
+    var messageData = BinaryData.FromObjectAsJson(createdGameResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(createdGame.Group, messageData, WebPubSubDataType.Json));
   }
 
   public async Task HandleJoinGame(string userId, GameEntry game)
@@ -54,6 +63,14 @@ public class GameEventHandler
       _logger.LogInformation($"[{userId}][JOIN] Joined game |{JsonConvert.SerializeObject(updatedGame)}|");
 
       await _actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, updatedGame.Id));
+      var joinedGameResponse = new Response
+      {
+        Scope = Scope.GROUP,
+        EventType = EventType.JOINED,
+        Data = updatedGame
+      };
+      var messageData = BinaryData.FromObjectAsJson(joinedGameResponse);
+      await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(updatedGame.Group, messageData, WebPubSubDataType.Json));
     }
   }
 
