@@ -9,14 +9,14 @@ import { ConnectionInfo } from '../../types/types';
   providedIn: 'root',
 })
 export class NegotiateService {
-  private _httpClient = inject(HttpClient);
+  private httpClient = inject(HttpClient);
 
   constructor(@Inject(BASE_API_URL_KEY) private baseApiUrl: string) {}
 
   public getConnectionInfo(): Observable<ConnectionInfo> {
     const httpParams = new HttpParams().append('username', v4());
 
-    const request$ = this._httpClient.get<ConnectionInfo>(
+    const request$ = this.httpClient.get<ConnectionInfo>(
       `${this.baseApiUrl}/negotiate`,
       {
         params: httpParams,
