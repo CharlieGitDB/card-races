@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { NegotiateService } from '@services/services';
+import { GameService, NegotiateService } from '@services/services';
 import { lastValueFrom } from 'rxjs';
+import { SUIT } from 'src/app/data/types/Suit';
 
 @Component({
   selector: 'app-intro-page',
@@ -8,14 +9,18 @@ import { lastValueFrom } from 'rxjs';
   styleUrls: ['./intro-page.component.scss'],
 })
 export class IntroPageComponent implements OnInit {
-  private _negotiateService = inject(NegotiateService);
+  private negotiateService = inject(NegotiateService);
+  private gameService = inject(GameService);
 
   async ngOnInit(): Promise<void> {
-    //fix cors on functionapp
-    const request$ = this._negotiateService.getConnectionInfo();
+    const request$ = this.negotiateService.getConnectionInfo();
     const connectionInfo = await lastValueFrom(request$);
-    console.log(connectionInfo.accessToken, 'token');
-    console.log(connectionInfo.baseUrl, 'base');
-    console.log(connectionInfo.url, 'url');
+
+    this.gameService.connect(connectionInfo.url);
+    this.gameService.createGame(SUIT.CLUBS);
+
+    this.gameService.info$.subscribe((data) => {
+      console.log(data, 'data');
+    });
   }
 }
