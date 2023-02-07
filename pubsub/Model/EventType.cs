@@ -5,6 +5,8 @@ public enum EventType
   CREATE,
   JOIN,
   START,
+  ADVANCE,
   WINNER,
-  REPLAY
+  REPLAY,
+  INFO
 }

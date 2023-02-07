@@ -1,15 +1,19 @@
-using System;
 using System.Text.Json.Serialization;
 
 namespace PubSub.Model;
 
 # nullable enable
-public class GameEvent
+
+public class Response
 {
+  [JsonConverter(typeof(JsonStringEnumConverter))]
+  [JsonPropertyName("scope")]
+  public Scope Scope { get; set; }
+
   [JsonConverter(typeof(JsonStringEnumConverter))]
   [JsonPropertyName("eventType")]
   public EventType EventType { get; set; }
 
   [JsonPropertyName("data")]
-  public EventData? Data { get; set; }
+  public dynamic? Data { get; set; }
 }

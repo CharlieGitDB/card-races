@@ -68,8 +68,14 @@ public class GameEventHandler
       _logger.LogInformation($"[START] Starting next round.. {updatedGame.CurrentRound}");
       updatedGame.NextRound();
 
-      var messageData = BinaryData.FromString(JsonConvert.SerializeObject(updatedGame));
-      await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Text));
+      var updatedGameResponse = new Response
+      {
+        Scope = Scope.GROUP,
+        EventType = EventType.ADVANCE,
+        Data = updatedGame
+      };
+      var messageData = BinaryData.FromObjectAsJson(updatedGameResponse);
+      await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Json));
       _logger.LogInformation("[START] Round ended..");
       Thread.Sleep(2800);
     }
@@ -77,8 +83,14 @@ public class GameEventHandler
     var declareWinner = updatedGame.GetWinningUsers((Suit)updatedGame.Winner);
     _logger.LogInformation($"[START] |{JsonConvert.SerializeObject(declareWinner)}|");
 
-    var winnerData = BinaryData.FromString(JsonConvert.SerializeObject(declareWinner));
-    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, winnerData, WebPubSubDataType.Text));
+    var winnerResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.WINNER,
+      Data = declareWinner
+    };
+    var winnerData = BinaryData.FromObjectAsJson(winnerResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, winnerData, WebPubSubDataType.Json));
 
     _logger.LogInformation("[START] Game Finished");
     _logger.LogInformation("[START] Deleting game..");

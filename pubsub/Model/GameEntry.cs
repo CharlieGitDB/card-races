@@ -19,12 +19,14 @@ public class GameEntry
   [JsonPropertyName("started")]
   public bool Started { get; set; } = false;
 
+  [JsonConverter(typeof(JsonStringEnumConverter))]
   [JsonPropertyName("winner")]
   public Suit? Winner { get; set; }
 
   [JsonPropertyName("stats")]
   public Dictionary<Suit, int> Stats { get; set; } = InitStats();
 
+  [JsonPropertyName("group")]
   public string Group => Id;
 
   [JsonPropertyName("currentRound")]
