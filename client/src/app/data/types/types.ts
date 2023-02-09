@@ -1,3 +1,4 @@
+export * from './AppState';
 export * from './ConnectionInfo';
 export * from './EventType';
 export * from './GameEntry';

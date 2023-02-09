@@ -1,12 +1,18 @@
-import { createActionGroup, props } from '@ngrx/store';
-import { GameEntry } from '../../types/GameEntry';
+import { createAction, props } from '@ngrx/store';
+import { GameEntry, Suit } from '../../types/types';
 
-const GAME_ACTIONS_SOURCE = 'Game';
-const SET_GAME_DATA = 'Set Game Data';
+const SET_GAME_DATA = '[GAME] Set game data';
+const CREATE_GAME = '[GAME] Create game';
+const GAME_CREATED = '[GAME] New game created';
 
-export const GameActions = createActionGroup({
-  source: GAME_ACTIONS_SOURCE,
-  events: {
-    [SET_GAME_DATA]: props<{ gameData: GameEntry }>(),
-  },
-});
+export const CreateGame = createAction(CREATE_GAME, props<{ suit: Suit }>());
+
+export const GameWasCreated = createAction(
+  GAME_CREATED,
+  props<{ gameData: GameEntry }>()
+);
+
+export const SetGameData = createAction(
+  SET_GAME_DATA,
+  props<{ gameData: GameEntry }>()
+);
