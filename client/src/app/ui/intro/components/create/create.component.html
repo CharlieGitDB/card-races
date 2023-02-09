@@ -1,1 +1,8 @@
-<button mat-raised-button color="primary" (click)="createGame()">Create Game</button>
+<button mat-raised-button color="primary" (click)="createGame()">
+  <ng-container *ngIf="!loading">
+    Create Game
+  </ng-container>
+  <ng-container *ngIf="loading">
+    <mat-spinner diameter="20"></mat-spinner>
+  </ng-container>
+</button>

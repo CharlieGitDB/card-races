@@ -13,8 +13,12 @@ import { NotFoundPageComponent } from './ui/shared/containers/not-found-page/not
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BASE_API_URL_KEY } from '@constants/constants';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { environment } from 'src/environments/environment';
+import { gameReducer, loadingReducer } from './data/store/store';
 import { BoardComponent } from './ui/game/components/board/board.component';
 import { CardComponent } from './ui/game/components/card/card.component';
 import { GamePageComponent } from './ui/game/containers/game-page/game-page.component';
@@ -45,7 +49,10 @@ import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.
     BrowserAnimationsModule,
     MatButtonModule,
     MatListModule,
+    MatProgressSpinnerModule,
     HttpClientModule,
+    StoreModule.forRoot({ game: gameReducer, loading: loadingReducer }, {}),
+    EffectsModule.forRoot([]),
   ],
   providers: [
     {
