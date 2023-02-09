@@ -23,7 +23,6 @@ export class CreateComponent {
     }
 
     this.loading = true;
-    console.log('called create from component');
     this.store.dispatch(CreateGame({ suit: this.selectedSuit }));
   }
 }
