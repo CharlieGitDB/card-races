@@ -1,5 +1,5 @@
 <mat-list role="list">
-  <mat-list-item role="listitem">Player 1</mat-list-item>
-  <mat-list-item role="listitem">Player 2</mat-list-item>
-  <mat-list-item role="listitem">Player 3</mat-list-item>
+  <ng-container *ngFor="let user of users$ | async | keyvalue">
+    <mat-list-item role="listitem">{{ user.key }} - {{ user.value }}</mat-list-item>
+  </ng-container>
 </mat-list>
