@@ -1,3 +1,6 @@
 <p class="mat-headline-3">Players</p>
-<app-player-list></app-player-list>
-<app-start></app-start>
+<app-player-list [users]="users$ | async"></app-player-list>
+<app-start
+  [disabled]="canStartGame(users$ | async) == false"
+  (startGame)="startGame()"
+></app-start>

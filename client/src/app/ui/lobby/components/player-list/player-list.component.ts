@@ -1,7 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { selectGameUserData } from 'src/app/data/store/store';
-import { AppState } from 'src/app/data/types/AppState';
+import { Component, Input } from '@angular/core';
+import { Suit } from 'src/app/data/types/Suit';
 
 @Component({
   selector: 'app-player-list',
@@ -9,6 +7,6 @@ import { AppState } from 'src/app/data/types/AppState';
   styleUrls: ['./player-list.component.scss'],
 })
 export class PlayerListComponent {
-  private store: Store<AppState> = inject(Store);
-  public users$ = this.store.select(selectGameUserData);
+  @Input()
+  public users: Record<string, Suit> | null = null;
 }

@@ -1,1 +1,1 @@
-<button mat-raised-button [routerLink]="['/game']" color="primary">Start</button>
+<button [disabled]="disabled" mat-raised-button color="primary" (click)="startGame.emit()">Start</button>
