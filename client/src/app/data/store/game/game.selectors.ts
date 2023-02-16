@@ -18,3 +18,7 @@ export const selectGameCurrentRound = createSelector(
   selectGameData,
   (gameEntry) => gameEntry.currentRound
 );
+export const selectGameGroupId = createSelector(
+  selectGameData,
+  (gameEntry) => gameEntry.group
+);

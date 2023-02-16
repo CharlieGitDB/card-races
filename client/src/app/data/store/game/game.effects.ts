@@ -42,14 +42,16 @@ export class GameEffects {
     { dispatch: false }
   );
 
-  gameCreatedEffect$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(GameWasCreated),
-      tap(() => console.log('Game was created action was ran')),
-      switchMap(async ({ gameData }) => {
-        this.router.navigate(['lobby']);
-        return SetGameData({ gameData });
-      })
-    )
+  gameCreatedEffect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(GameWasCreated),
+        tap(() => console.log('Game was created action was ran')),
+        switchMap(async ({ gameData }) => {
+          this.store.dispatch(SetGameData({ gameData }));
+          this.router.navigate(['lobby']);
+        })
+      ),
+    { dispatch: false }
   );
 }

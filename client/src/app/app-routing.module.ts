@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { GameStartedGuard } from './guards/game-started.guard';
+import { InGameGuard } from './guards/in-game.guard';
 import { GamePageComponent } from './ui/game/containers/game-page/game-page.component';
 import { IntroPageComponent } from './ui/intro/containers/intro-page/intro-page.component';
 import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.component';
@@ -12,10 +14,12 @@ const routes: Routes = [
   },
   {
     path: 'lobby',
+    canActivate: [InGameGuard],
     component: LobbyPageComponent,
   },
   {
     path: 'game',
+    canActivate: [GameStartedGuard],
     component: GamePageComponent,
   },
   {
