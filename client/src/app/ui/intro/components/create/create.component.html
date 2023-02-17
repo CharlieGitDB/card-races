@@ -1,4 +1,8 @@
-<button mat-raised-button color="primary" (click)="createGame()">
+<button
+  [disabled]="loading"
+  mat-raised-button
+  color="primary"
+  (click)="createGame()">
   <ng-container *ngIf="!loading">
     Create Game
   </ng-container>

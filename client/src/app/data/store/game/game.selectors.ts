@@ -23,3 +23,7 @@ export const selectGameGroupId = createSelector(
   selectGameData,
   (gameEntry) => gameEntry.group
 );
+export const selectGameRecentPick = createSelector(
+  selectGameData,
+  (gameEntry) => gameEntry.recentPick
+);

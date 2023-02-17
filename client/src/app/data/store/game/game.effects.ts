@@ -11,6 +11,7 @@ import {
   GameWasCreated,
   JoinedGame,
   JoinGame,
+  NextRound,
   SetGameData,
   StartedGame,
   StartGame,
@@ -76,7 +77,7 @@ export class GameEffects {
     () =>
       this.actions$.pipe(
         ofType(GameWasCreated, JoinedGame),
-        tap(() => console.log('Game was created or joined action was ran')),
+        tap(() => console.log('game was created or joined action was ran')),
         switchMap(async ({ gameData }) => {
           this.store.dispatch(SetGameData({ gameData }));
 
@@ -112,5 +113,13 @@ export class GameEffects {
         })
       ),
     { dispatch: false }
+  );
+
+  nextRoundEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(NextRound),
+      tap(() => console.log('next round action was ran')),
+      switchMap(async ({ gameData }) => SetGameData({ gameData }))
+    )
   );
 }

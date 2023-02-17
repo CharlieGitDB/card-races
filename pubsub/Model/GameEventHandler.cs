@@ -73,7 +73,7 @@ public class GameEventHandler
       updatedGame.NextRound();
       await sendNextRound(group, updatedGame);
       _logger.LogInformation("[START] Round ended..");
-      Thread.Sleep(2800);
+      Thread.Sleep(2000);
     }
 
     var declareWinner = updatedGame.GetWinningUsers((Suit)updatedGame.Winner);

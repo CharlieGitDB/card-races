@@ -5,6 +5,7 @@ export interface GameEntry {
   userData: Record<string, Suit>;
   pickedSuits: Set<Suit>;
   started: boolean;
+  recentPick: Suit;
   winner: Suit;
   stats: Record<Suit, number>;
   group: string;

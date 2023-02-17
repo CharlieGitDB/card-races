@@ -19,6 +19,9 @@ public class GameEntry
   [JsonPropertyName("started")]
   public bool Started { get; set; } = false;
 
+  [JsonPropertyName("recentPick")]
+  public Suit RecentPick { get; set; }
+
   [JsonConverter(typeof(JsonStringEnumConverter))]
   [JsonPropertyName("winner")]
   public Suit? Winner { get; set; }
@@ -36,9 +39,9 @@ public class GameEntry
   {
     CurrentRound = CurrentRound + 1;
 
-    Random random = new Random();
-    int randomIndex = random.Next(PickedSuits.Count);
-    Suit randomSuit = PickedSuits.ToArray()[randomIndex];
+    Suit randomSuit = GetRandomSuit();
+
+    RecentPick = randomSuit;
 
     var updatedCount = Stats[randomSuit] + 1;
     Stats[randomSuit] = updatedCount;
@@ -63,5 +66,12 @@ public class GameEntry
   {
     return Enum.GetValues<Suit>()
       .ToDictionary(suit => suit, suit => 0);
+  }
+
+  private Suit GetRandomSuit()
+  {
+    Random random = new Random();
+    int randomIndex = random.Next(PickedSuits.Count);
+    return PickedSuits.ToArray()[randomIndex];
   }
 }

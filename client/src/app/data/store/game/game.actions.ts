@@ -12,6 +12,8 @@ const JOINED_GAME = '[GAME] Game was joined';
 const START_GAME = '[GAME] Start game';
 const STARTED_GAME = '[GAME] Started game';
 
+const NEXT_ROUND = '[GAME] Start next round';
+
 export const CreateGame = createAction(CREATE_GAME, props<{ suit: Suit }>());
 
 export const GameWasCreated = createAction(
@@ -33,6 +35,11 @@ export const StartGame = createAction(START_GAME, props);
 
 export const StartedGame = createAction(
   STARTED_GAME,
+  props<{ gameData: GameEntry }>()
+);
+
+export const NextRound = createAction(
+  NEXT_ROUND,
   props<{ gameData: GameEntry }>()
 );
 

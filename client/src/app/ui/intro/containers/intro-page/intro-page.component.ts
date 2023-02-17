@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { GameService, NegotiateService } from '@services/services';
 import { lastValueFrom } from 'rxjs';
-import { JoinedGame, StartedGame } from 'src/app/data/store/store';
+import { JoinedGame, NextRound, StartedGame } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 
 @Component({
@@ -27,6 +27,10 @@ export class IntroPageComponent implements OnInit {
 
     this.gameService.startedGame$.subscribe((res) =>
       this.store.dispatch(StartedGame({ gameData: res.data }))
+    );
+
+    this.gameService.nextRound$.subscribe((res) =>
+      this.store.dispatch(NextRound({ gameData: res.data }))
     );
   }
 }
