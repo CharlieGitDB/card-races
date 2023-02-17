@@ -1,7 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { GameEntry } from '../../types/GameEntry';
 
-export const selectGameData = createFeatureSelector<GameEntry>('game');
+export const GAME_KEY = 'game';
+export const selectGameData = createFeatureSelector<GameEntry>(GAME_KEY);
 export const selectGameUserData = createSelector(
   selectGameData,
   (gameEntry) => gameEntry.userData

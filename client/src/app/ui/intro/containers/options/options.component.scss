@@ -8,10 +8,13 @@
   justify-content: center;
 }
 
-app-create {
-  margin-right: vars.$standard-spacing;
+.game-options {
+  display: flex;
+  flex-direction: row;
+  margin-top: vars.$large-spacing;
 }
 
-.game-options {
-  margin-top: vars.$large-spacing;
+.game-options__header {
+  margin-left: vars.$standard-spacing;
+  margin-right: vars.$standard-spacing;
 }

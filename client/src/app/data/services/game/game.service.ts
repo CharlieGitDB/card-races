@@ -46,6 +46,15 @@ export class GameService {
     }))
   );
 
+  public startedGame$ = this.messages$.pipe(
+    map((res) => res as Response),
+    filter((res) => res.eventType === EVENT_TYPE.STARTED),
+    map((res) => ({
+      ...res,
+      data: res.data as GameEntry,
+    }))
+  );
+
   public nextRound$ = this.messages$.pipe(
     map((res) => res as Response),
     filter((res) => res.eventType === EVENT_TYPE.ADVANCE),
@@ -73,6 +82,8 @@ export class GameService {
     }))
   );
 
+  public all$ = this.messages$.pipe(map((res) => res as Response));
+
   public connect(url: string): void {
     this.socket$ = webSocket(url);
     this.socket$
@@ -97,7 +108,7 @@ export class GameService {
     this.sendMessage(message);
   }
 
-  public joinGame(suit: Suit, group: string) {
+  public joinGame(group: string, suit: Suit) {
     const message: Message = {
       eventType: EVENT_TYPE.JOIN,
       data: {

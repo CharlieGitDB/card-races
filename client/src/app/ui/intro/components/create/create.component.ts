@@ -1,8 +1,6 @@
-import { Component, inject, Input } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { CreateGame } from 'src/app/data/store/store';
-import { AppState } from 'src/app/data/types/AppState';
-import { Suit } from 'src/app/data/types/Suit';
+import { Component, inject } from '@angular/core';
+import { lastValueFrom, take } from 'rxjs';
+import { IntroFacade } from '../../facades/intro.facade';
 
 @Component({
   selector: 'app-create',
@@ -10,19 +8,18 @@ import { Suit } from 'src/app/data/types/Suit';
   styleUrls: ['./create.component.scss'],
 })
 export class CreateComponent {
-  private store: Store<AppState> = inject(Store);
+  private introFacade = inject(IntroFacade);
 
-  public loading: boolean = false;
+  public loading = false;
 
-  @Input()
-  public selectedSuit: Suit | null = null;
+  public async createGame() {
+    const suit = await lastValueFrom(this.introFacade.suit$.pipe(take(1)));
 
-  public createGame() {
-    if (this.selectedSuit === null || this.loading) {
+    if (suit === null || this.loading) {
       return;
     }
 
     this.loading = true;
-    this.store.dispatch(CreateGame({ suit: this.selectedSuit }));
+    this.introFacade.createGame(suit!);
   }
 }

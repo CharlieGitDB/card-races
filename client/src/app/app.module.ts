@@ -1,4 +1,4 @@
-import { NgModule, isDevMode } from '@angular/core';
+import { isDevMode, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -11,14 +11,26 @@ import { IntroPageComponent } from './ui/intro/containers/intro-page/intro-page.
 import { OptionsComponent } from './ui/intro/containers/options/options.component';
 import { NotFoundPageComponent } from './ui/shared/containers/not-found-page/not-found-page.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BASE_API_URL_KEY } from '@constants/constants';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
-import { GameEffects, gameReducer, loadingReducer } from './data/store/store';
+import {
+  GameEffects,
+  gameReducer,
+  GAME_KEY,
+  loadingReducer,
+  LOADING_KEY,
+  suitReducer,
+  SUIT_KEY,
+} from './data/store/store';
 import { BoardComponent } from './ui/game/components/board/board.component';
 import { CardComponent } from './ui/game/components/card/card.component';
 import { GamePageComponent } from './ui/game/containers/game-page/game-page.component';
@@ -26,7 +38,6 @@ import { SuitSelectComponent } from './ui/intro/components/suit-select/suit-sele
 import { PlayerListComponent } from './ui/lobby/components/player-list/player-list.component';
 import { StartComponent } from './ui/lobby/components/start/start.component';
 import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.component';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -48,11 +59,23 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
+
     MatButtonModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+
     HttpClientModule,
-    StoreModule.forRoot({ game: gameReducer, loading: loadingReducer }, {}),
+    StoreModule.forRoot(
+      {
+        [SUIT_KEY]: suitReducer,
+        [GAME_KEY]: gameReducer,
+        [LOADING_KEY]: loadingReducer,
+      },
+      {}
+    ),
     EffectsModule.forRoot([GameEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],

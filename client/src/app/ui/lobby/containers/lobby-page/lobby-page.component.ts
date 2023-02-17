@@ -1,9 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { selectGameUserData } from 'src/app/data/store/store';
-import { AppState } from 'src/app/data/types/AppState';
 import { Suit } from 'src/app/data/types/Suit';
+import { LobbyFacade } from '../../facades/lobby.facade';
 
 @Component({
   selector: 'app-lobby-page',
@@ -11,9 +8,10 @@ import { Suit } from 'src/app/data/types/Suit';
   styleUrls: ['./lobby-page.component.scss'],
 })
 export class LobbyPageComponent {
-  private store: Store<AppState> = inject(Store);
-  private router = inject(Router);
-  public users$ = this.store.select(selectGameUserData);
+  private lobbyFacade = inject(LobbyFacade);
+
+  public users$ = this.lobbyFacade.users$;
+  public groupId$ = this.lobbyFacade.groupId$;
 
   public canStartGame(users: Record<string, Suit> | null): boolean {
     if (!users) {
@@ -24,6 +22,6 @@ export class LobbyPageComponent {
   }
 
   public startGame() {
-    this.router.navigate(['game']);
+    this.lobbyFacade.startGame();
   }
 }

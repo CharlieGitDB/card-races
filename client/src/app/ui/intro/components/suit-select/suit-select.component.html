@@ -3,9 +3,9 @@
   <ng-container *ngFor="let suit of suits; let i = index">
     <div class="card" tabindex="i">
       <img
-        [ngClass]="{ selected: suit === selectedSuit }"
+        [ngClass]="{ selected: suit === (suit$ | async) }"
         [src]="'/assets/' + suit + '.svg'"
-        (click)="selectSuit.emit(suit)"
+        (click)="selectSuit(suit)"
       />
     </div>
   </ng-container>
