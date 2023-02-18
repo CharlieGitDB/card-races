@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using PubSub.Util;
 
 namespace PubSub.Model;
 
@@ -10,15 +11,18 @@ public class GameEntry
   [JsonPropertyName("id")]
   public string Id { get; set; }
 
+  [JsonConverter(typeof(UserDataConverter))]
   [JsonPropertyName("userData")]
   public Dictionary<string, Suit> UserData { get; set; } = new Dictionary<string, Suit>();
 
+  [JsonConverter(typeof(PickedSuitsConverter))]
   [JsonPropertyName("pickedSuits")]
   public HashSet<Suit> PickedSuits { get; set; } = new HashSet<Suit>();
 
   [JsonPropertyName("started")]
   public bool Started { get; set; } = false;
 
+  [JsonConverter(typeof(JsonStringEnumConverter))]
   [JsonPropertyName("recentPick")]
   public Suit RecentPick { get; set; }
 
@@ -26,6 +30,7 @@ public class GameEntry
   [JsonPropertyName("winner")]
   public Suit? Winner { get; set; }
 
+  [JsonConverter(typeof(StatsConverter))]
   [JsonPropertyName("stats")]
   public Dictionary<Suit, int> Stats { get; set; } = InitStats();
 
