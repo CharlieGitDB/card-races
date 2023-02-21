@@ -1,9 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  selectGameRecentPick,
-  selectGameStats,
-} from 'src/app/data/store/store';
+import { map, skip } from 'rxjs';
+import { selectGameData, selectGameStats } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 
 @Injectable({
@@ -12,6 +10,10 @@ import { AppState } from 'src/app/data/types/AppState';
 export class GameFacade {
   private store: Store<AppState> = inject(Store);
 
-  public recentPick$ = this.store.select(selectGameRecentPick);
   public stats$ = this.store.select(selectGameStats);
+
+  public recentPick$ = this.store.select(selectGameData).pipe(
+    skip(1),
+    map((gameEntry) => gameEntry.recentPick)
+  );
 }

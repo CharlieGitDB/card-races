@@ -6,8 +6,12 @@
   justify-content: center;
 }
 
+app-board {
+  height: 85vh;
+  max-height: 85vh;
+}
+
 app-card {
-  $height: 400px;
-  height: $height;
-  width: calc(#{$height} / 1.42);
+  min-height: 15vh;
+  height: 15vh;
 }

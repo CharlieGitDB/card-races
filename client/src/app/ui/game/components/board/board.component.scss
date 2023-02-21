@@ -9,11 +9,9 @@
 
   width: 100%;
   height: calc(80% - #{vars.$small-spacing});
-
-  margin-bottom: vars.$small-spacing;
 }
 
 .card {
-  height: 10vh;
+  height: calc(85vh / 11);
   margin: auto;
 }

@@ -1,4 +1,4 @@
-<div class="card" [ngClass]="flip ? 'flip' : ''" (click)="flipIt()">
-  <img [src]="'/assets/' + SUIT.SPADES + '.svg'" class="card-face front" />
-  <img src="/assets/BACK.svg" class="card-face back" />
+<div class="card" [ngClass]="(flip ? 'flip' : '')" (click)="flipIt()">
+  <img src="/assets/BACK.svg" class="card-face" />
+  <img [src]="'/assets/' + (suit ? suit : 'HEARTS') + '.svg'" class="card-face front" />
 </div>

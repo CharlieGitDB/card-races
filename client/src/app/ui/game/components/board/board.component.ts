@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { SUIT } from 'src/app/data/types/Suit';
 import { GameFacade } from '../../facades/game.facade';
 
 @Component({
@@ -9,5 +10,6 @@ import { GameFacade } from '../../facades/game.facade';
 export class BoardComponent {
   private gameFacade = inject(GameFacade);
 
+  public SUIT = SUIT;
   public stats$ = this.gameFacade.stats$;
 }

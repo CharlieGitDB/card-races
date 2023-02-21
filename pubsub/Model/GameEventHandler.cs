@@ -67,13 +67,14 @@ public class GameEventHandler
 
     _logger.LogInformation("[START] Starting game..");
 
+    Thread.Sleep(3000);
     while (updatedGame.Winner == null)
     {
       _logger.LogInformation($"[START] Starting next round.. {updatedGame.CurrentRound}");
       updatedGame.NextRound();
       await sendNextRound(group, updatedGame);
       _logger.LogInformation("[START] Round ended..");
-      Thread.Sleep(2000);
+      Thread.Sleep(3000);
     }
 
     var declareWinner = updatedGame.GetWinningUsers((Suit)updatedGame.Winner);
