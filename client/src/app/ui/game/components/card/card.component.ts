@@ -31,8 +31,4 @@ export class CardComponent implements OnInit {
       }
     });
   }
-
-  public flipIt() {
-    this.flip = !this.flip;
-  }
 }
