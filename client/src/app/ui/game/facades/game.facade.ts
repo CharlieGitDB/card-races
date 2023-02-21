@@ -13,7 +13,7 @@ export class GameFacade {
   public stats$ = this.store.select(selectGameStats);
 
   public recentPick$ = this.store.select(selectGameData).pipe(
-    skip(1),
-    map((gameEntry) => gameEntry.recentPick)
+    skip(1), //skip the first emit, as the game hasn't started
+    map((gameEntry) => gameEntry.recentPick) //use map instead of selector to avoid memoized selection
   );
 }
