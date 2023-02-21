@@ -15,15 +15,19 @@ public class UserContextService
   }
   private UserContext GetContext()
   {
-    var hasGameState = ConnectionContext.ConnectionStates.TryGetValue(GameConstants.USER_CONTEXT, out var binaryGameContext);
+    var hasUserState = ConnectionContext.ConnectionStates.TryGetValue(GameConstants.USER_CONTEXT, out var binaryGameContext);
 
-    if (hasGameState)
+    if (hasUserState)
     {
       return binaryGameContext.ToObjectFromJson<UserContext>();
     }
     else
     {
-      return new UserContext();
+      var userContext = new UserContext
+      {
+        Id = ConnectionContext.UserId
+      };
+      return userContext;
     }
   }
 

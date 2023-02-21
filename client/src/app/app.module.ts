@@ -31,6 +31,8 @@ import {
   suitReducer,
   SUIT_KEY,
 } from './data/store/store';
+import { userReducer } from './data/store/user/user.reducers';
+import { USER_KEY } from './data/store/user/user.selectors';
 import { BoardComponent } from './ui/game/components/board/board.component';
 import { CardComponent } from './ui/game/components/card/card.component';
 import { GamePageComponent } from './ui/game/containers/game-page/game-page.component';
@@ -70,6 +72,7 @@ import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.
     HttpClientModule,
     StoreModule.forRoot(
       {
+        [USER_KEY]: userReducer,
         [SUIT_KEY]: suitReducer,
         [GAME_KEY]: gameReducer,
         [LOADING_KEY]: loadingReducer,

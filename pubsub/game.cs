@@ -65,16 +65,6 @@ public class Game
         throw new Exception("Invalid event");
     }
 
-    var toAll = new Response
-    {
-      Scope = Scope.ALL,
-      EventType = EventType.INFO,
-      Data = $"[{userId}] To All! {data.ToString()}"
-    };
-    await actions.AddAsync(WebPubSubAction.CreateSendToAllAction(
-        BinaryData.FromObjectAsJson(toAll),
-        WebPubSubDataType.Json));
-
     var userResponse = new Response
     {
       Scope = Scope.USER,

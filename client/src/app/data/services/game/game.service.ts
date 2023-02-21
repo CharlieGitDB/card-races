@@ -11,12 +11,14 @@ import {
 } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { MessageData } from '../../types/MessageData';
+import { SCOPE } from '../../types/Scope';
 import {
   EVENT_TYPE,
   GameEntry,
   Message,
   Response,
   Suit,
+  UserContext,
   Winner,
 } from '../../types/types';
 
@@ -80,6 +82,25 @@ export class GameService {
       ...res,
       data: res.data as string | MessageData,
     }))
+  );
+
+  public everyoneScope$ = this.messages$.pipe(
+    map((res) => res as Response),
+    filter((res) => res.scope === SCOPE.ALL)
+  );
+
+  public userScope$ = this.messages$.pipe(
+    map((res) => res as Response),
+    filter((res) => res.scope === SCOPE.USER),
+    map((res) => ({
+      ...res,
+      data: res.data as string | UserContext,
+    }))
+  );
+
+  public groupScope$ = this.messages$.pipe(
+    map((res) => res as Response),
+    filter((res) => res.scope === SCOPE.GROUP)
   );
 
   public all$ = this.messages$.pipe(map((res) => res as Response));

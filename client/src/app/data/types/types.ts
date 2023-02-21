@@ -5,4 +5,5 @@ export * from './GameEntry';
 export * from './Message';
 export * from './Response';
 export * from './Suit';
+export * from './UserContext';
 export * from './Winner';

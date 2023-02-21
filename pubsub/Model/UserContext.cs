@@ -4,6 +4,9 @@ namespace PubSub.Model;
 
 public class UserContext
 {
+  [JsonPropertyName("id")]
+  public string Id { get; set; }
+
   [JsonPropertyName("group")]
   public string Group { get; set; }
 

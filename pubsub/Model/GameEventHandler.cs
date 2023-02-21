@@ -67,7 +67,7 @@ public class GameEventHandler
 
     _logger.LogInformation("[START] Starting game..");
 
-    Thread.Sleep(3000);
+    Thread.Sleep(1500);
     while (updatedGame.Winner == null)
     {
       _logger.LogInformation($"[START] Starting next round.. {updatedGame.CurrentRound}");
