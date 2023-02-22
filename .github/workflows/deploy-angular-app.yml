@@ -45,7 +45,7 @@ jobs:
       - name: Set functionapp endpoint in angular environment
         run: |
           FUNCTIONAPP_HOSTNAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].defaultHostName --output tsv)
-          FUNCTIONAPP_URL="$FUNCTIONAPP_HOSTNAME/api"
+          FUNCTIONAPP_URL="https://$FUNCTIONAPP_HOSTNAME/api"
           echo "export const environment = { functionAppUrl: '$FUNCTIONAPP_URL' };" > ./client/src/environments/environment.ts
 
       - name: Set staticwebapp token
