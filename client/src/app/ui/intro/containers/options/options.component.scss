@@ -1,0 +1,20 @@
+@use 'src/variables' as vars;
+
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-options {
+  display: flex;
+  flex-direction: row;
+  margin-top: vars.$large-spacing;
+}
+
+.game-options__header {
+  margin-left: vars.$standard-spacing;
+  margin-right: vars.$standard-spacing;
+}

@@ -1,0 +1,31 @@
+:host {
+  width: 100%;
+  height: 100%;
+  perspective: 600px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+  border-radius: 5px;
+}
+
+.card-face {
+  position: absolute;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip {
+  transform: rotateY(180deg);
+}
+
+.front {
+  transform: rotateY(180deg);
+}

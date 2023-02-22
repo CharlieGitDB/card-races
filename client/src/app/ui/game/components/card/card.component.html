@@ -1,0 +1,4 @@
+<div class="card" [ngClass]="(flip ? 'flip' : '')">
+  <img src="/assets/BACK.svg" class="card-face" />
+  <img [src]="'/assets/' + (suit ? suit : 'HEARTS') + '.svg'" class="card-face front" />
+</div>

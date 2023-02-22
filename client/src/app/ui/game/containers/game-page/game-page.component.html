@@ -1,0 +1,14 @@
+<app-board></app-board>
+
+<div class="actions">
+  <ng-container *ngIf="(winner$ | async)">
+    <ng-container [ngSwitch]="(isWinner$ | async)">
+      <p class="mat-headline-4" *ngSwitchCase="true">YOU WIN!</p>
+      <p class="mat-headline-4" *ngSwitchCase="false">YOU LOSE!</p>
+    </ng-container>
+
+  </ng-container>
+  <ng-container *ngIf="!(winner$ | async)">
+    <app-card></app-card>
+  </ng-container>
+</div>

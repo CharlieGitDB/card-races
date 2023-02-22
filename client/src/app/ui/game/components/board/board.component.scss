@@ -1,0 +1,17 @@
+@use '../../../../../variables' as vars;
+
+:host {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+
+  width: 100%;
+  height: calc(80% - #{vars.$small-spacing});
+}
+
+.card {
+  height: calc(85vh / 11);
+  margin: auto;
+}

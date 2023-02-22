@@ -1,0 +1,18 @@
+<form [formGroup]="joinForm" (ngSubmit)="submit()">
+  <mat-form-field>
+    <mat-label>Group Id</mat-label>
+    <input matInput formControlName="groupId" />
+  </mat-form-field>
+  <button
+    [disabled]="!(suit$ | async) || !joinForm.controls.groupId.value || loading"
+    mat-raised-button
+    color="primary"
+  >
+    <ng-container *ngIf="!loading">
+      Join Game
+    </ng-container>
+    <ng-container *ngIf="loading">
+      <mat-spinner diameter="20" color="accent"></mat-spinner>
+    </ng-container>
+  </button>
+</form>

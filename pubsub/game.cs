@@ -65,15 +65,16 @@ public class Game
         throw new Exception("Invalid event");
     }
 
-    // to all
-    await actions.AddAsync(WebPubSubAction.CreateSendToAllAction(
-        BinaryData.FromString($"[{userId}] To All! {data.ToString()}"),
-        WebPubSubDataType.Text));
-
+    var userResponse = new Response
+    {
+      Scope = Scope.USER,
+      EventType = EventType.INFO,
+      Data = userContextService.Instance
+    };
     var userEventResponse = new UserEventResponse
     {
-      Data = BinaryData.FromString("[SYSTEM] General Response"),
-      DataType = WebPubSubDataType.Text,
+      Data = BinaryData.FromObjectAsJson(userResponse),
+      DataType = WebPubSubDataType.Json,
     };
     userEventResponse.SetState(GameConstants.USER_CONTEXT, userContextService.Instance);
 
@@ -86,6 +87,8 @@ public class Game
 
     var userContextService = new UserContextService(connectionContext);
     _logger.LogInformation($"[{userId}][USER CONTEXT] |{JsonConvert.SerializeObject(userContextService.Instance)}|");
+
+    _logger.LogInformation($"[{userId}][DATA] |{JsonConvert.SerializeObject(data)}|");
 
     var gameEvent = data.ToObjectFromJson<GameEvent>();
     _logger.LogInformation($"[{userId}][GAME EVENT] |{JsonConvert.SerializeObject(gameEvent)}|");

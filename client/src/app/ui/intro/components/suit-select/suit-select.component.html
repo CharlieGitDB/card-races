@@ -1,0 +1,12 @@
+<p class="mat-h1">Select Suit</p>
+<div class="suits">
+  <ng-container *ngFor="let suit of suits; let i = index">
+    <div class="card" tabindex="i">
+      <img
+        [ngClass]="{ selected: suit === (suit$ | async) }"
+        [src]="'/assets/' + suit + '.svg'"
+        (click)="selectSuit(suit)"
+      />
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,22 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+app-board {
+  height: 85vh;
+  max-height: 85vh;
+}
+
+.actions {
+  min-height: 15vh;
+  height: 15vh;
+}
+
+// app-card {
+//   min-height: 15vh;
+//   height: 15vh;
+// }

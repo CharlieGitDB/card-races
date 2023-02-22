@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -33,6 +34,7 @@ public class GameEventHandler
     _userContextService.UpdateGameContext(createdGame.Id, suit);
     _logger.LogInformation($"[{userId}][CREATE] Created game! |{JsonConvert.SerializeObject(createdGame)}|");
     await _actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, createdGame.Id));
+    await sendGameCreated(createdGame);
   }
 
   public async Task HandleJoinGame(string userId, GameEntry game)
@@ -54,35 +56,94 @@ public class GameEventHandler
       _logger.LogInformation($"[{userId}][JOIN] Joined game |{JsonConvert.SerializeObject(updatedGame)}|");
 
       await _actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, updatedGame.Id));
+      await sendGameJoined(updatedGame);
     }
   }
 
   public async Task HandleStartGame(string group, GameEntry game)
   {
     var updatedGame = await _gameService.StartGameAsync(game);
+    await sendGameStarted(updatedGame);
 
     _logger.LogInformation("[START] Starting game..");
 
+    Thread.Sleep(1500);
     while (updatedGame.Winner == null)
     {
       _logger.LogInformation($"[START] Starting next round.. {updatedGame.CurrentRound}");
       updatedGame.NextRound();
-
-      var messageData = BinaryData.FromString(JsonConvert.SerializeObject(updatedGame));
-      await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Text));
+      await sendNextRound(group, updatedGame);
       _logger.LogInformation("[START] Round ended..");
-      Thread.Sleep(2800);
+      Thread.Sleep(3000);
     }
 
     var declareWinner = updatedGame.GetWinningUsers((Suit)updatedGame.Winner);
     _logger.LogInformation($"[START] |{JsonConvert.SerializeObject(declareWinner)}|");
-
-    var winnerData = BinaryData.FromString(JsonConvert.SerializeObject(declareWinner));
-    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, winnerData, WebPubSubDataType.Text));
+    await sendGameWinner(group, declareWinner);
 
     _logger.LogInformation("[START] Game Finished");
     _logger.LogInformation("[START] Deleting game..");
     await _gameService.DeleteGameAsync(updatedGame.Id);
     _logger.LogInformation("[START] Deleted game..");
+  }
+
+  private async Task sendGameWinner(string group, Dictionary<string, Suit> declareWinner)
+  {
+    var winnerResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.WINNER,
+      Data = declareWinner
+    };
+    var messageData = BinaryData.FromObjectAsJson(winnerResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Json));
+  }
+
+  private async Task sendNextRound(string group, GameEntry updatedGame)
+  {
+    var updatedGameResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.ADVANCE,
+      Data = updatedGame
+    };
+    var messageData = BinaryData.FromObjectAsJson(updatedGameResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Json));
+  }
+
+  private async Task sendGameCreated(GameEntry createdGame)
+  {
+    var createdGameResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.CREATED,
+      Data = createdGame
+    };
+    var messageData = BinaryData.FromObjectAsJson(createdGameResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(createdGame.Group, messageData, WebPubSubDataType.Json));
+  }
+
+  private async Task sendGameJoined(GameEntry updatedGame)
+  {
+    var joinedGameResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.JOINED,
+      Data = updatedGame
+    };
+    var messageData = BinaryData.FromObjectAsJson(joinedGameResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(updatedGame.Group, messageData, WebPubSubDataType.Json));
+  }
+
+  private async Task sendGameStarted(GameEntry updatedGame)
+  {
+    var startedGameResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.STARTED,
+      Data = updatedGame
+    };
+    var messageData = BinaryData.FromObjectAsJson(startedGameResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(updatedGame.Group, messageData, WebPubSubDataType.Json));
   }
 }

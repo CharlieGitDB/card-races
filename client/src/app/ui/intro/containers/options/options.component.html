@@ -1,0 +1,14 @@
+<p class="mat-headline-5">{{ 'Card Races' | uppercase }}</p>
+
+<app-suit-select></app-suit-select>
+
+<div
+  class="game-options"
+  [@showOptions]="(selectedSuit$ | async) ? 'show' : 'hide'"
+>
+  <app-create></app-create>
+
+  <p class="game-options__header mat-headline-6">OR</p>
+
+  <app-join></app-join>
+</div>
