@@ -20,6 +20,7 @@ export class CardComponent implements OnInit {
   ngOnInit() {
     this.recentPick$.subscribe((suit) => {
       if (suit) {
+        console.log(suit, 'suit');
         this.suit = suit;
         this.flip = true;
         this.cdr.detectChanges();

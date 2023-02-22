@@ -2,7 +2,7 @@
   <ng-container *ngFor="let suit of SUIT | keyvalue; let i = index">
     <img
       class="card"
-      [src]="'/assets/'+ suit.key + '.svg'"
+      [src]="'/assets/card_'+ suit.key.toLowerCase() + '.svg'"
       [ngStyle]="{ 'grid-column': i + 1, 'grid-row': 11 }"
     />
   </ng-container>
@@ -10,7 +10,7 @@
 <ng-container *ngFor="let suit of (stats$ | async) | keyvalue; let i = index">
   <img
     class="card"
-    [src]="'/assets/'+ suit.key + '.svg'"
+    [src]="'/assets/card_'+ suit.key.toLowerCase() + '.svg'"
     [ngStyle]="{ 'grid-column': i + 1, 'grid-row': 11 - suit.value }"
   />
 </ng-container>
