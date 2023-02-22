@@ -4,7 +4,7 @@
     <div class="card" tabindex="i">
       <img
         [ngClass]="{ selected: suit === (suit$ | async) }"
-        [src]="'/assets/' + suit + '.svg'"
+        [src]="'/assets/card_' + suit.toLowerCase() + '.svg'"
         (click)="selectSuit(suit)"
       />
     </div>
