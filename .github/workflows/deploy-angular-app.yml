@@ -50,8 +50,8 @@ jobs:
 
       - name: Set staticwebapp token
         run: |
-          echo ::add-mask::$(az staticwebapp secrets list -n "${{ env.RESOURCEGROUP_NAME }}-staticwebapp" --query properties.apiKey --output tsv)
-          echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n "${{ env.RESOURCEGROUP_NAME }}-staticwebapp" --query properties.apiKey --output tsv)" >> $GITHUB_ENV
+          echo ::add-mask::$(az staticwebapp secrets list -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}--staticwebapp" --query properties.apiKey --output tsv)
+          echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}--staticwebapp" --query properties.apiKey --output tsv)" >> $GITHUB_ENV
 
       - name: Build And Deploy
         id: builddeploy
@@ -66,5 +66,5 @@ jobs:
       - name: Set the functionapp's cors rules to allow the angular app
         run: |
           FUNCTIONAPP_NAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].name --output tsv)
-          az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins "https://$(az staticwebapp show -n ${{ env.RESOURCEGROUP_NAME }}-staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} --query defaultHostname --output tsv)"
+          az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins "https://$(az staticwebapp show -n ${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}--staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} --query defaultHostname --output tsv)"
           az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins "http://localhost:4200"
