@@ -15,6 +15,8 @@ public class GameService
 
   private ILogger Logger;
 
+  private readonly int FIVE_MINUTES = 300;
+
   public GameService(CosmosClient client, ILogger logger)
   {
     Client = client;
@@ -25,7 +27,8 @@ public class GameService
     var containerProperties = new ContainerProperties()
     {
       Id = GameConstants.CONTAINER,
-      PartitionKeyPath = GameConstants.GAME_PARTITION_KEY
+      PartitionKeyPath = GameConstants.GAME_PARTITION_KEY,
+      DefaultTimeToLive = FIVE_MINUTES
     };
     var container = db.Result.Database.CreateContainerIfNotExistsAsync(containerProperties);
     Container = container.Result;
