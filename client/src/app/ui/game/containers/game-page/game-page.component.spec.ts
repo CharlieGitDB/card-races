@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideMockStore } from '@ngrx/store/testing';
+import { BoardComponent } from '../../components/board/board.component';
+import { CardComponent } from '../../components/card/card.component';
 
 import { GamePageComponent } from './game-page.component';
 
@@ -8,9 +11,9 @@ describe('GamePageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GamePageComponent ]
-    })
-    .compileComponents();
+      declarations: [GamePageComponent, BoardComponent, CardComponent],
+      providers: [provideMockStore()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(GamePageComponent);
     component = fixture.componentInstance;
