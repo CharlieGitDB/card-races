@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { lastValueFrom, take } from 'rxjs';
 import { IntroFacade } from '../../facades/intro.facade';
@@ -7,6 +7,7 @@ import { IntroFacade } from '../../facades/intro.facade';
   selector: 'app-join',
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JoinComponent {
   private introFacade = inject(IntroFacade);
