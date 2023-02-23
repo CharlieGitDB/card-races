@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { lastValueFrom, take } from 'rxjs';
 import { IntroFacade } from '../../facades/intro.facade';
 
@@ -6,6 +6,7 @@ import { IntroFacade } from '../../facades/intro.facade';
   selector: 'app-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateComponent {
   private introFacade = inject(IntroFacade);

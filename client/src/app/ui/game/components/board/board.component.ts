@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SUIT } from 'src/app/data/types/Suit';
 import { GameFacade } from '../../facades/game.facade';
 
@@ -6,6 +6,7 @@ import { GameFacade } from '../../facades/game.facade';
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardComponent {
   private gameFacade = inject(GameFacade);

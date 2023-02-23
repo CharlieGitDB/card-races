@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { Suit } from 'src/app/data/types/Suit';
 import { GameFacade } from '../../facades/game.facade';
 
@@ -6,6 +12,7 @@ import { GameFacade } from '../../facades/game.facade';
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent implements OnInit {
   private gameFacade = inject(GameFacade);
