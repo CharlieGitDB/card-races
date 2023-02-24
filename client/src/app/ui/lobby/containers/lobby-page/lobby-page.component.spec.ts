@@ -2,12 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatListModule } from '@angular/material/list';
 import { By } from '@angular/platform-browser';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  selectGameGroupId,
-  selectGameUserData,
-} from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 import { SUIT } from 'src/app/data/types/types';
+import {
+  MOCK_GROUP_ID,
+  MOCK_INITIAL_STORE_STATE,
+  MOCK_USER_ID,
+} from 'src/app/testing/mock';
 import { PlayerListComponent } from '../../components/player-list/player-list.component';
 import { StartComponent } from '../../components/start/start.component';
 
@@ -18,28 +19,13 @@ describe('LobbyPageComponent', () => {
   let fixture: ComponentFixture<LobbyPageComponent>;
   let store: MockStore<AppState>;
 
-  let MOCK_GROUP_ID = 'mockgroupid';
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatListModule],
       declarations: [LobbyPageComponent, PlayerListComponent, StartComponent],
       providers: [
         provideMockStore<AppState>({
-          selectors: [
-            {
-              selector: selectGameGroupId,
-              value: MOCK_GROUP_ID,
-            },
-            {
-              selector: selectGameUserData,
-              value: [
-                {
-                  fakeid: SUIT.CLUBS,
-                },
-              ],
-            },
-          ],
+          initialState: MOCK_INITIAL_STORE_STATE,
         }),
       ],
     }).compileComponents();
@@ -74,5 +60,43 @@ describe('LobbyPageComponent', () => {
       By.directive(StartComponent)
     );
     expect(playListComponent).toBeTruthy();
+  });
+
+  it('should return true for lobbyPage.canStartGame when there is more than one user', () => {
+    const userData = {
+      [MOCK_USER_ID]: SUIT.CLUBS,
+      FAKEUSER2: SUIT.DIAMONDS,
+    };
+
+    const canStartGame = component.canStartGame(userData);
+
+    expect(canStartGame).toBeTrue();
+  });
+
+  it('should return false for lobbyPage.canStartGame when there is less than one user', () => {
+    const userData = {
+      [MOCK_USER_ID]: SUIT.CLUBS,
+    };
+
+    const canStartGame = component.canStartGame(userData);
+
+    expect(canStartGame).toBeFalse();
+  });
+
+  it('should return false for lobbyPage.canStartGame when there are no users at all', () => {
+    const canStartGame = component.canStartGame(null);
+
+    expect(canStartGame).toBeFalse();
+  });
+
+  it('should call lobbyFacade.startGame when lobbyPage.startGame is ran', () => {
+    component.startGame = jasmine.createSpy('startGame');
+
+    const startComponent = fixture.debugElement.query(
+      By.directive(StartComponent)
+    ).componentInstance;
+    startComponent.startGame.emit();
+
+    expect(component.startGame).toHaveBeenCalled();
   });
 });
