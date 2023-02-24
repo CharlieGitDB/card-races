@@ -1,82 +1,57 @@
-import { Component } from '@angular/core';
+import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatListItem, MatListModule } from '@angular/material/list';
 import { By } from '@angular/platform-browser';
-import { Suit, SUIT } from 'src/app/data/types/Suit';
+import { SUIT } from 'src/app/data/types/Suit';
 import { MOCK_USER_ID } from 'src/app/testing/mock';
 
 import { PlayerListComponent } from './player-list.component';
 
 describe('PlayerListComponent', () => {
-  @Component({
-    template: '<app-player-list [users]="users"></app-player-list>',
-  })
-  class HostComponent {
-    public users: Record<string, Suit> | null = null;
-  }
+  let component: PlayerListComponent;
+  let componentRef: ComponentRef<PlayerListComponent>;
+  let fixture: ComponentFixture<PlayerListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatListModule],
-      declarations: [HostComponent, PlayerListComponent],
+      declarations: [PlayerListComponent],
     }).compileComponents();
   });
 
-  describe('direct component tests', () => {
-    let component: PlayerListComponent;
-    let fixture: ComponentFixture<PlayerListComponent>;
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(PlayerListComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    });
-
-    it('should create', () => {
-      expect(component).toBeTruthy();
-    });
-
-    afterEach(() => fixture.destroy());
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PlayerListComponent);
+    component = fixture.componentInstance;
+    componentRef = fixture.componentRef;
+    fixture.detectChanges();
   });
 
-  describe('from host component tests', () => {
-    let hostComponent: HostComponent;
-    let hostFixture: ComponentFixture<HostComponent>;
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-    beforeEach(async () => {
-      hostFixture = TestBed.createComponent(HostComponent);
-      hostComponent = hostFixture.componentInstance;
-      hostFixture.detectChanges();
+  afterEach(() => fixture.destroy());
+
+  it('should not have any list items when Input() users is null', () => {
+    const matListItems = fixture.debugElement.query(By.directive(MatListItem));
+
+    expect(matListItems).toBeFalsy();
+  });
+
+  it('should have list items when Input() users has data', () => {
+    componentRef.setInput('users', {
+      [MOCK_USER_ID]: SUIT.DIAMONDS,
     });
+    fixture.detectChanges();
 
-    afterEach(() => hostFixture.destroy());
+    const matListItems = fixture.debugElement.query(By.directive(MatListItem));
 
-    it('should not have any list items when Input() users is null', () => {
-      const matListItems = hostFixture.debugElement
-        .query(By.directive(PlayerListComponent))
-        .query(By.directive(MatListItem));
+    expect(matListItems).toBeTruthy();
 
-      expect(matListItems).toBeFalsy();
-    });
+    const firstListItem = matListItems.children[0];
 
-    it('should have list items when Input() users has data', () => {
-      hostComponent.users = {
-        [MOCK_USER_ID]: SUIT.DIAMONDS,
-      };
-
-      hostFixture.detectChanges();
-
-      const matListItems = hostFixture.debugElement
-        .query(By.directive(PlayerListComponent))
-        .query(By.directive(MatListItem));
-
-      expect(matListItems).toBeTruthy();
-
-      const firstListItem = matListItems.children[0];
-
-      expect(firstListItem.nativeElement.textContent).toBe(
-        `${MOCK_USER_ID} - ${SUIT.DIAMONDS}`
-      );
-    });
+    expect(firstListItem.nativeElement.textContent).toBe(
+      `${MOCK_USER_ID} - ${SUIT.DIAMONDS}`
+    );
   });
 });
