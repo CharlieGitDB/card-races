@@ -36,4 +36,30 @@ describe('StartComponent', () => {
       .nativeElement as HTMLButtonElement;
     expect(startButton.disabled).toBeFalse();
   });
+
+  it('should emit startGame when disabled is false and start button is clicked', () => {
+    fixture.componentInstance.disabled = false;
+    fixture.detectChanges();
+
+    spyOn(component.startGame, 'emit');
+
+    const startButton = fixture.debugElement.query(By.css('button'))
+      .nativeElement as HTMLButtonElement;
+    startButton.click();
+
+    expect(component.startGame.emit).toHaveBeenCalled();
+  });
+
+  it('should NOT emit startGame when disabled is false and start button is clicked', () => {
+    fixture.componentInstance.disabled = true;
+    fixture.detectChanges();
+
+    spyOn(component.startGame, 'emit');
+
+    const startButton = fixture.debugElement.query(By.css('button'))
+      .nativeElement as HTMLButtonElement;
+    startButton.click();
+
+    expect(component.startGame.emit).not.toHaveBeenCalled();
+  });
 });
