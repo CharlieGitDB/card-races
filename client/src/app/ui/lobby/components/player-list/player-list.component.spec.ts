@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatListItem, MatListModule } from '@angular/material/list';
 import { By } from '@angular/platform-browser';
-import { SUIT } from 'src/app/data/types/Suit';
+import { Suit, SUIT } from 'src/app/data/types/Suit';
 import { MOCK_USER_ID } from 'src/app/testing/mock';
 
 import { PlayerListComponent } from './player-list.component';
@@ -12,7 +12,7 @@ describe('PlayerListComponent', () => {
     template: '<app-player-list [users]="users"></app-player-list>',
   })
   class HostComponent {
-    public users = null;
+    public users: Record<string, Suit> | null = null;
   }
 
   beforeEach(async () => {
@@ -40,8 +40,8 @@ describe('PlayerListComponent', () => {
   });
 
   describe('from host component tests', () => {
-    let hostComponent: PlayerListComponent;
-    let hostFixture: ComponentFixture<PlayerListComponent>;
+    let hostComponent: HostComponent;
+    let hostFixture: ComponentFixture<HostComponent>;
 
     beforeEach(async () => {
       hostFixture = TestBed.createComponent(HostComponent);
@@ -52,8 +52,6 @@ describe('PlayerListComponent', () => {
     afterEach(() => hostFixture.destroy());
 
     it('should not have any list items when Input() users is null', () => {
-      hostFixture.detectChanges();
-
       const matListItems = hostFixture.debugElement
         .query(By.directive(PlayerListComponent))
         .query(By.directive(MatListItem));
@@ -65,6 +63,7 @@ describe('PlayerListComponent', () => {
       hostComponent.users = {
         [MOCK_USER_ID]: SUIT.DIAMONDS,
       };
+
       hostFixture.detectChanges();
 
       const matListItems = hostFixture.debugElement
