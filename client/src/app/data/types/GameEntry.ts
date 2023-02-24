@@ -6,7 +6,7 @@ export interface GameEntry {
   pickedSuits: Set<Suit>;
   started: boolean;
   recentPick: Suit;
-  winner: Suit;
+  winner?: Suit;
   stats: Record<Suit, number>;
   group: string;
   currentRound: number;
