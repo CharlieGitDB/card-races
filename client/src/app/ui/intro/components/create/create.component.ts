@@ -21,6 +21,6 @@ export class CreateComponent {
     }
 
     this.loading = true;
-    this.introFacade.createGame(suit!);
+    this.introFacade.createGame(suit);
   }
 }
