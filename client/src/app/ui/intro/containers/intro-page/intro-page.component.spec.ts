@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BASE_API_URL_KEY } from '@constants/base-api-url-key';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -49,5 +50,12 @@ describe('IntroPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should has the options component', () => {
+    const optionsComponent = fixture.debugElement.query(
+      By.directive(OptionsComponent)
+    );
+    expect(optionsComponent).toBeTruthy();
   });
 });
