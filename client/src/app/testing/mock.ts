@@ -29,7 +29,7 @@ export const MOCK_GAME_ENTRY = {
     SPADES: 0,
   },
   userData: {
-    MOCK_USER_ID: SUIT.CLUBS,
+    [MOCK_USER_ID]: SUIT.CLUBS,
   },
 };
 
