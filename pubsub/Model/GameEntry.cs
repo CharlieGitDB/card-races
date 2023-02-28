@@ -24,7 +24,7 @@ public class GameEntry
 
   [JsonConverter(typeof(JsonStringEnumConverter))]
   [JsonPropertyName("recentPick")]
-  public Suit RecentPick { get; set; }
+  public Suit? RecentPick { get; set; }
 
   [JsonConverter(typeof(JsonStringEnumConverter))]
   [JsonPropertyName("winner")]
