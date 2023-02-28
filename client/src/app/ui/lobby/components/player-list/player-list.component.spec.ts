@@ -17,14 +17,14 @@ describe('PlayerListComponent', () => {
       imports: [MatListModule],
       declarations: [PlayerListComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PlayerListComponent);
     component = fixture.componentInstance;
     componentRef = fixture.componentRef;
     fixture.detectChanges();
   });
+
+  afterEach(() => fixture.destroy());
 
   it('should create', () => {
     expect(component).toBeTruthy();

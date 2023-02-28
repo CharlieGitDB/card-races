@@ -29,6 +29,8 @@ describe('SuitSelectComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => fixture.destroy());
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -59,25 +61,27 @@ describe('SuitSelectComponent', () => {
 
     suitImg?.click();
 
+    fixture.detectChanges();
+
     return suitImg ?? null;
   };
 
-  it('should set select class on clubs when clicked', async () => {
+  it('should set select class on clubs when clicked', () => {
     const clubsImg = clickSuitCard(SUIT.CLUBS);
     expect(clubsImg?.classList.contains('selected')).toBeTruthy();
   });
 
-  it('should set select class on diamonds when clicked', async () => {
+  it('should set select class on diamonds when clicked', () => {
     const diamondsImg = clickSuitCard(SUIT.DIAMONDS);
     expect(diamondsImg?.classList.contains('selected')).toBeTruthy();
   });
 
-  it('should set select class on hearts when clicked', async () => {
+  it('should set select class on hearts when clicked', () => {
     const heartsImg = clickSuitCard(SUIT.HEARTS);
     expect(heartsImg?.classList.contains('selected')).toBeTruthy();
   });
 
-  it('should set select class on spades when clicked', async () => {
+  it('should set select class on spades when clicked', () => {
     const spadesImg = clickSuitCard(SUIT.SPADES);
     expect(spadesImg?.classList.contains('selected')).toBeTruthy();
   });

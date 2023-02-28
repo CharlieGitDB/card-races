@@ -36,6 +36,8 @@ describe('LobbyPageComponent', () => {
     store = TestBed.inject(MockStore);
   });
 
+  afterEach(() => fixture.destroy());
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
