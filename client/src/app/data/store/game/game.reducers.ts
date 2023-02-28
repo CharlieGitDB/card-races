@@ -4,6 +4,7 @@ import { SetGameData } from './game.actions';
 
 const initialState: Partial<GameEntry> = {
   recentPick: null,
+  winner: null,
 };
 
 export const gameReducer = createReducer(

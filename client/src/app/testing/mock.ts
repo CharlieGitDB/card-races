@@ -1,6 +1,6 @@
 import { GAME_KEY, LOADING_KEY, SUIT_KEY } from 'src/app/data/store/store';
 import { USER_KEY } from 'src/app/data/store/user/user.selectors';
-import { AppState, Suit, SUIT } from 'src/app/data/types/types';
+import { AppState, GameEntry, Suit, SUIT } from 'src/app/data/types/types';
 
 export const MOCK_USER_ID = 'fakeuserid';
 export const MOCK_GROUP_ID = 'fakegroupid';
@@ -15,7 +15,7 @@ export const MOCK_SUIT_STATE = {
   [SUIT_KEY]: SUIT.CLUBS,
 };
 
-export const MOCK_GAME_ENTRY = {
+export const MOCK_GAME_ENTRY: GameEntry = {
   id: MOCK_GROUP_ID,
   group: MOCK_GROUP_ID,
   currentRound: 0,
@@ -31,6 +31,7 @@ export const MOCK_GAME_ENTRY = {
   userData: {
     [MOCK_USER_ID]: SUIT.CLUBS,
   },
+  winner: null,
 };
 
 export const MOCK_INITIAL_STORE_STATE: AppState = {
