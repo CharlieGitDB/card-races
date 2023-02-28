@@ -60,7 +60,7 @@ describe('GameFacade', () => {
     expect(winner).toEqual(mockWinner);
   });
 
-  it('should have isWinner$ when selectUserIsWinner', async () => {
+  it('should have recentPick$ when store game.recentPick has value', async () => {
     const mockRecentPick = SUIT.DIAMONDS;
     store.overrideSelector(selectGameData, {
       ...MOCK_GAME_ENTRY,
