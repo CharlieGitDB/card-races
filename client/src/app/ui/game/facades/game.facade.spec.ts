@@ -2,12 +2,14 @@ import { TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { lastValueFrom, take } from 'rxjs';
 import {
+  selectGameData,
   selectGameStats,
   selectGameWinner,
   selectUserIsWinner,
 } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 import { SUIT } from 'src/app/data/types/Suit';
+import { MOCK_GAME_ENTRY } from 'src/app/testing/mock';
 import { GameFacade } from './game.facade';
 
 describe('GameFacade', () => {
@@ -56,5 +58,20 @@ describe('GameFacade', () => {
     const winner = await lastValueFrom(gameFacade.isWinner$.pipe(take(1)));
 
     expect(winner).toEqual(mockWinner);
+  });
+
+  it('should have isWinner$ when selectUserIsWinner', async () => {
+    const mockRecentPick = SUIT.DIAMONDS;
+    store.overrideSelector(selectGameData, {
+      ...MOCK_GAME_ENTRY,
+      recentPick: mockRecentPick,
+    });
+    store.refreshState();
+
+    const recentPick = await lastValueFrom(
+      gameFacade.recentPick$.pipe(take(1))
+    );
+
+    expect(recentPick).toEqual(mockRecentPick);
   });
 });
