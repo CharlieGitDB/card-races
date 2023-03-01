@@ -21,7 +21,7 @@ export const MOCK_GAME_ENTRY: GameEntry = {
   currentRound: 0,
   pickedSuits: new Set<Suit>([SUIT.CLUBS]),
   started: false,
-  recentPick: SUIT.DIAMONDS,
+  recentPick: null,
   stats: {
     CLUBS: 0,
     HEARTS: 0,
