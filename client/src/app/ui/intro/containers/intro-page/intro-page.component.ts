@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { GameService, NegotiateService } from '@services/services';
 import { lastValueFrom } from 'rxjs';
@@ -10,6 +15,7 @@ import { AppState } from 'src/app/data/types/AppState';
   selector: 'app-intro-page',
   templateUrl: './intro-page.component.html',
   styleUrls: ['./intro-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IntroPageComponent implements OnInit {
   private negotiateService = inject(NegotiateService);

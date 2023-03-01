@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Suit } from 'src/app/data/types/Suit';
 import { LobbyFacade } from '../../facades/lobby.facade';
 
@@ -6,6 +6,7 @@ import { LobbyFacade } from '../../facades/lobby.facade';
   selector: 'app-lobby-page',
   templateUrl: './lobby-page.component.html',
   styleUrls: ['./lobby-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LobbyPageComponent {
   private lobbyFacade = inject(LobbyFacade);

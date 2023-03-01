@@ -18,16 +18,13 @@ export class CardComponent implements OnInit {
   private gameFacade = inject(GameFacade);
   private cdr = inject(ChangeDetectorRef);
 
-  public recentPick$ = this.gameFacade.recentPick$;
-
   public suit: Suit | null = null;
 
   public flip = false;
 
   ngOnInit() {
-    this.recentPick$.subscribe((suit) => {
+    this.gameFacade.recentPick$.subscribe((suit) => {
       if (suit) {
-        console.log(suit, 'suit');
         this.suit = suit;
         this.flip = true;
         this.cdr.detectChanges();
