@@ -50,7 +50,10 @@ describe('OptionsComponent', () => {
     store = TestBed.inject(MockStore);
   });
 
-  afterEach(() => fixture.destroy());
+  afterEach(() => {
+    fixture.destroy();
+    store.resetSelectors();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

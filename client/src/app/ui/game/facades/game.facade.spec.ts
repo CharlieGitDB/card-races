@@ -25,6 +25,8 @@ describe('GameFacade', () => {
     store = TestBed.inject(MockStore);
   });
 
+  afterEach(() => store.resetSelectors());
+
   it('should have stats$ when selectGameStats', async () => {
     const mockStats = {
       CLUBS: 2,

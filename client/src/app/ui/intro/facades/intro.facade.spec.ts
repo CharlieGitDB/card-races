@@ -25,6 +25,8 @@ describe('IntroFacade', () => {
     store = TestBed.inject(MockStore);
   });
 
+  afterEach(() => store.resetSelectors());
+
   it('should dispatch setSuit on intro.setSuit', () => {
     spyOn((introFacade as any).store, 'dispatch');
     introFacade.setSuit(SUIT.CLUBS);

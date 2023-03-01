@@ -24,6 +24,8 @@ describe('LobbyFacade', () => {
     store = TestBed.inject(MockStore);
   });
 
+  afterEach(() => store.resetSelectors());
+
   it('should dispatch startGame on lobbyFacade.startGame', () => {
     spyOn((lobbyFacade as any).store, 'dispatch');
     lobbyFacade.startGame();
