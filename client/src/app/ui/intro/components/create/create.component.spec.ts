@@ -17,6 +17,7 @@ describe('CreateComponent', () => {
   let component: CreateComponent;
   let fixture: ComponentFixture<CreateComponent>;
   let mockIntroCreateGame = jasmine.createSpy('createGame');
+  let cdr: ChangeDetectorRef;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -41,6 +42,8 @@ describe('CreateComponent', () => {
     fixture = TestBed.createComponent(CreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    cdr =
+      fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef);
   });
 
   afterEach(() => fixture.destroy());
@@ -51,10 +54,6 @@ describe('CreateComponent', () => {
 
   it('should disable button when loading is true', async () => {
     component.loading = true;
-
-    //create a cdr
-    const cdr =
-      fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef);
     cdr.detectChanges();
 
     const createGameButton = fixture.debugElement.query(By.css('button'))
@@ -65,10 +64,6 @@ describe('CreateComponent', () => {
 
   it('should NOT disable button when loading is false', () => {
     component.loading = false;
-
-    //create a cdr
-    const cdr =
-      fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef);
     cdr.detectChanges();
 
     const createGameButton = fixture.debugElement.query(By.css('button'))
@@ -79,10 +74,6 @@ describe('CreateComponent', () => {
 
   it('should show create game text in button when loading is false', () => {
     component.loading = false;
-
-    //create a cdr
-    const cdr =
-      fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef);
     cdr.detectChanges();
 
     const createGameButton = fixture.debugElement.query(By.css('button'))
@@ -93,10 +84,6 @@ describe('CreateComponent', () => {
 
   it('should show spinner when loading is true', () => {
     component.loading = true;
-
-    //create a cdr
-    const cdr =
-      fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef);
     cdr.detectChanges();
 
     const matSpinner = fixture.debugElement.query(
