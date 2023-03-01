@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { suitReducer, SUIT_KEY } from 'src/app/data/store/store';
-import { Suit, suitList } from 'src/app/data/types/Suit';
+import { suitList } from 'src/app/data/types/Suit';
 
 import { SuitSelectComponent } from './suit-select.component';
 
@@ -49,22 +49,6 @@ describe('SuitSelectComponent', () => {
       expect(suitImg).toBeTruthy();
     });
   });
-
-  const clickSuitCard = (suit: Suit): HTMLImageElement | null => {
-    const suitImg = fixture.debugElement
-      .queryAll(By.css('img'))
-      .map((img) => img.nativeElement as HTMLImageElement)
-      .find(
-        (img) =>
-          img.src.split('/assets/')[1] === `card_${suit.toLowerCase()}.svg`
-      );
-
-    suitImg?.click();
-
-    fixture.detectChanges();
-
-    return suitImg ?? null;
-  };
 
   it('should select suit on suit click', async () => {
     spyOn(component, 'selectSuit').and.callThrough();
