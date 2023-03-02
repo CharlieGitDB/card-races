@@ -39,6 +39,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+          node-version: 18.x
 
       - name: Set default deploy environment
         run: |
