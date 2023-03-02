@@ -73,6 +73,7 @@ describe('LobbyPageComponent', () => {
     const canStartGame = component.canStartGame(userData);
 
     expect(canStartGame).toBeTrue();
+    expect(false).toBeTrue();
   });
 
   it('should return false for lobbyPage.canStartGame when there is less than one user', () => {
