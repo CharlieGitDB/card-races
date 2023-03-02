@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@main
       - uses: actions/setup-node@v1
         with:
-          node-version: 19.x
+          node-version: 18.x
 
       - name: Run all tests
         run: |
