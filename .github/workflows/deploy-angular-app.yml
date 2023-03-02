@@ -31,54 +31,55 @@ jobs:
           npm ci
           npm test -- --no-watch --no-progress --browsers=ChromeHeadless
 
-  # build-and-deploy:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@main
-  #     - uses: azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.AZURE_CREDENTIALS }}
+  build-and-deploy:
+    needs: [runs-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-  #     - name: Set default deploy environment
-  #       run: |
-  #         if [ -z "${{ inputs.environment }}" ]
-  #         then
-  #           echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
-  #         else
-  #           echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
-  #         fi
+      - name: Set default deploy environment
+        run: |
+          if [ -z "${{ inputs.environment }}" ]
+          then
+            echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+          fi
 
-  #     - name: Set resource group environment name
-  #       run: |
-  #         echo "RESOURCEGROUP_NAME=${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-rg" >> $GITHUB_ENV
+      - name: Set resource group environment name
+        run: |
+          echo "RESOURCEGROUP_NAME=${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-rg" >> $GITHUB_ENV
 
-  #     - name: Create static webapp in azure (if it does not exist)
-  #       run: |
-  #         az staticwebapp create -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" -g ${{ env.RESOURCEGROUP_NAME }}
+      - name: Create static webapp in azure (if it does not exist)
+        run: |
+          az staticwebapp create -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" -g ${{ env.RESOURCEGROUP_NAME }}
 
-  #     - name: Set functionapp endpoint in angular environment
-  #       run: |
-  #         FUNCTIONAPP_HOSTNAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].defaultHostName --output tsv)
-  #         FUNCTIONAPP_URL="https://$FUNCTIONAPP_HOSTNAME/api"
-  #         echo "export const environment = { functionAppUrl: '$FUNCTIONAPP_URL' };" > ./client/src/environments/environment.ts
+      - name: Set functionapp endpoint in angular environment
+        run: |
+          FUNCTIONAPP_HOSTNAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].defaultHostName --output tsv)
+          FUNCTIONAPP_URL="https://$FUNCTIONAPP_HOSTNAME/api"
+          echo "export const environment = { functionAppUrl: '$FUNCTIONAPP_URL' };" > ./client/src/environments/environment.ts
 
-  #     - name: Set staticwebapp token
-  #       run: |
-  #         echo ::add-mask::$(az staticwebapp secrets list -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" --query properties.apiKey --output tsv)
-  #         echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" --query properties.apiKey --output tsv)" >> $GITHUB_ENV
+      - name: Set staticwebapp token
+        run: |
+          echo ::add-mask::$(az staticwebapp secrets list -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" --query properties.apiKey --output tsv)
+          echo "STATICWEBAPP_TOKEN=$(az staticwebapp secrets list -n "${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp" --query properties.apiKey --output tsv)" >> $GITHUB_ENV
 
-  #     - name: Build And Deploy
-  #       id: builddeploy
-  #       uses: Azure/static-web-apps-deploy@v1
-  #       with:
-  #         azure_static_web_apps_api_token: ${{ env.STATICWEBAPP_TOKEN }}
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
-  #         action: "upload"
-  #         app_location: "/client" # App source code path
-  #         output_location: "/dist/client" # dist folder, unsure if this works yet
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ env.STATICWEBAPP_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for GitHub integrations (i.e. PR comments)
+          action: "upload"
+          app_location: "/client" # App source code path
+          output_location: "/dist/client" # dist folder, unsure if this works yet
 
-  #     - name: Set the functionapp's cors rules to allow the angular app
-  #       run: |
-  #         FUNCTIONAPP_NAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].name --output tsv)
-  #         az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins "https://$(az staticwebapp show -n ${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} --query defaultHostname --output tsv)"
-  #         az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins "http://localhost:4200"
+      - name: Set the functionapp's cors rules to allow the angular app
+        run: |
+          FUNCTIONAPP_NAME=$(az functionapp list -g ${{ env.RESOURCEGROUP_NAME }} --query [0].name --output tsv)
+          az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins "https://$(az staticwebapp show -n ${{ env.DEPLOY_ENV }}-${{ env.BASE_RG_NAME }}-staticwebapp -g ${{ env.RESOURCEGROUP_NAME }} --query defaultHostname --output tsv)"
+          az functionapp cors add -g ${{ env.RESOURCEGROUP_NAME }} -n $FUNCTIONAPP_NAME --allowed-origins "http://localhost:4200"
