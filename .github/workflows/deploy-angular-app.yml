@@ -25,6 +25,10 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Run all tests
+        run: |
+          npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+
       - name: Set default deploy environment
         run: |
           if [ -z "${{ inputs.environment }}" ]
