@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SetupFacade } from 'src/app/ui/setup/facades/setup.facade';
-import { SHOW_OPTIONS } from '../../animations/show-options.animation';
+import { SHOW_OPTIONS } from './animations/show-options.animation';
 
 @Component({
   selector: 'app-options',
