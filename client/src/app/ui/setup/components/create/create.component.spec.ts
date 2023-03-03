@@ -9,7 +9,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { SUIT } from 'src/app/data/types/Suit';
 import { MOCK_INITIAL_STORE_STATE } from 'src/app/testing/mock';
-import { IntroFacade } from '../../facades/intro.facade';
+import { SetupFacade } from '../../facades/setup.facade';
 
 import { CreateComponent } from './create.component';
 
@@ -28,7 +28,7 @@ describe('CreateComponent', () => {
           initialState: MOCK_INITIAL_STORE_STATE,
         }),
         {
-          provide: IntroFacade,
+          provide: SetupFacade,
           useValue: {
             suit$: of(SUIT.CLUBS),
             createGame: mockIntroCreateGame,

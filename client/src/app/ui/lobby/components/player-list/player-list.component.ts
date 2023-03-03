@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Suit } from 'src/app/data/types/Suit';
+import { UserData } from 'src/app/data/types/UserData';
 
 @Component({
   selector: 'app-player-list',
@@ -9,5 +9,5 @@ import { Suit } from 'src/app/data/types/Suit';
 })
 export class PlayerListComponent {
   @Input()
-  public users: Record<string, Suit> | null = null;
+  public users: UserData | null = null;
 }

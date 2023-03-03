@@ -30,7 +30,9 @@ export class GameEffects {
       this.actions$.pipe(
         ofType(CreateGame),
         tap(() => console.log('create game action was ran')),
-        tap(({ suit }) => this.gameService.createGame(suit)),
+        tap(({ suit, nickname }) =>
+          this.gameService.createGame(suit, nickname)
+        ),
         tap(() => {
           const destroy$ = new Subject<void>();
           this.gameService.createdGame$
@@ -68,7 +70,9 @@ export class GameEffects {
       this.actions$.pipe(
         ofType(JoinGame),
         tap(() => console.log('join game action was ran')),
-        tap(({ group, suit }) => this.gameService.joinGame(group, suit))
+        tap(({ group, suit, nickname }) =>
+          this.gameService.joinGame(group, suit, nickname)
+        )
       ),
     { dispatch: false }
   );

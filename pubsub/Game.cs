@@ -42,7 +42,10 @@ public class Game
         var suit = gameEvent.Data?.Suit;
         if (suit == null) throw new Exception("Suit is required");
 
-        await gameEventHandler.HandleCreateGame(userId, (Suit)suit);
+        var nickname = gameEvent.Data?.NickName;
+        if (nickname == null) throw new Exception("Nickname is required");
+
+        await gameEventHandler.HandleCreateGame(userId, (Suit)suit, nickname);
         break;
       case EventType.JOIN:
       case EventType.START:

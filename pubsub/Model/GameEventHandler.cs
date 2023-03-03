@@ -28,10 +28,10 @@ public class GameEventHandler
     _gameEvent = gameEvent;
   }
 
-  public async Task HandleCreateGame(string userId, Suit suit)
+  public async Task HandleCreateGame(string userId, Suit suit, string nickname)
   {
-    var createdGame = await _gameService.CreateGameAsync(userId, suit);
-    _userContextService.UpdateGameContext(createdGame.Id, suit);
+    var createdGame = await _gameService.CreateGameAsync(userId, suit, nickname);
+    _userContextService.UpdateGameContext(createdGame.Id, suit, nickname);
     _logger.LogInformation($"[{userId}][CREATE] Created game! |{JsonConvert.SerializeObject(createdGame)}|");
     await _actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, createdGame.Id));
     await sendGameCreated(createdGame);
@@ -40,9 +40,16 @@ public class GameEventHandler
   public async Task HandleJoinGame(string userId, GameEntry game)
   {
     var suit = _gameEvent.Data?.Suit;
+    var nickname = _gameEvent.Data?.NickName;
+
     if (suit == null)
     {
       throw new Exception("Suit is required");
+    }
+
+    if (nickname == null)
+    {
+      throw new Exception("Nickname is required");
     }
 
     if (game.Started)
@@ -51,8 +58,8 @@ public class GameEventHandler
     }
     else
     {
-      var updatedGame = await _gameService.JoinGameAsync(userId, (Suit)suit, game);
-      _userContextService.UpdateGameContext(updatedGame.Id, (Suit)suit);
+      var updatedGame = await _gameService.JoinGameAsync(userId, (Suit)suit, nickname, game);
+      _userContextService.UpdateGameContext(updatedGame.Id, (Suit)suit, nickname);
       _logger.LogInformation($"[{userId}][JOIN] Joined game |{JsonConvert.SerializeObject(updatedGame)}|");
 
       await _actions.AddAsync(WebPubSubAction.CreateAddUserToGroupAction(userId, updatedGame.Id));
@@ -87,7 +94,7 @@ public class GameEventHandler
     _logger.LogInformation("[START] Deleted game..");
   }
 
-  private async Task sendGameWinner(string group, Dictionary<string, Suit> declareWinner)
+  private async Task sendGameWinner(string group, Dictionary<string, UserContext> declareWinner)
   {
     var winnerResponse = new Response
     {

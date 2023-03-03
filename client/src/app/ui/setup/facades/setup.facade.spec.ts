@@ -10,46 +10,46 @@ import {
 import { AppState } from 'src/app/data/types/AppState';
 import { SUIT } from 'src/app/data/types/Suit';
 import { MOCK_GROUP_ID } from 'src/app/testing/mock';
-import { IntroFacade } from './intro.facade';
+import { SetupFacade } from './setup.facade';
 
-describe('IntroFacade', () => {
-  let introFacade: IntroFacade;
+describe('SetupFacade', () => {
+  let setupFacade: SetupFacade;
   let store: MockStore<AppState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideMockStore(), IntroFacade],
+      providers: [provideMockStore(), SetupFacade],
     }).compileComponents();
 
-    introFacade = TestBed.inject(IntroFacade);
+    setupFacade = TestBed.inject(SetupFacade);
     store = TestBed.inject(MockStore);
   });
 
   afterEach(() => store.resetSelectors());
 
   it('should dispatch setSuit on intro.setSuit', () => {
-    spyOn((introFacade as any).store, 'dispatch');
-    introFacade.setSuit(SUIT.CLUBS);
+    spyOn((setupFacade as any).store, 'dispatch');
+    setupFacade.setSuit(SUIT.CLUBS);
 
-    expect((introFacade as any).store.dispatch).toHaveBeenCalledWith(
+    expect((setupFacade as any).store.dispatch).toHaveBeenCalledWith(
       SetSuit({ suit: SUIT.CLUBS })
     );
   });
 
   it('should dispatch createGame on intro.createGame', () => {
-    spyOn((introFacade as any).store, 'dispatch');
-    introFacade.createGame(SUIT.HEARTS);
+    spyOn((setupFacade as any).store, 'dispatch');
+    setupFacade.createGame(SUIT.HEARTS);
 
-    expect((introFacade as any).store.dispatch).toHaveBeenCalledWith(
+    expect((setupFacade as any).store.dispatch).toHaveBeenCalledWith(
       CreateGame({ suit: SUIT.HEARTS })
     );
   });
 
   it('should dispatch joinGame on intro.joinGame', () => {
-    spyOn((introFacade as any).store, 'dispatch');
-    introFacade.joinGame(MOCK_GROUP_ID, SUIT.SPADES);
+    spyOn((setupFacade as any).store, 'dispatch');
+    setupFacade.joinGame(MOCK_GROUP_ID, SUIT.SPADES);
 
-    expect((introFacade as any).store.dispatch).toHaveBeenCalledWith(
+    expect((setupFacade as any).store.dispatch).toHaveBeenCalledWith(
       JoinGame({ group: MOCK_GROUP_ID, suit: SUIT.SPADES })
     );
   });
@@ -58,7 +58,7 @@ describe('IntroFacade', () => {
     store.overrideSelector(selectSuit, SUIT.DIAMONDS);
     store.refreshState();
 
-    const suit = await lastValueFrom(introFacade.suit$.pipe(take(1)));
+    const suit = await lastValueFrom(setupFacade.suit$.pipe(take(1)));
 
     expect(suit).toEqual(SUIT.DIAMONDS);
   });

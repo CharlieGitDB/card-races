@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { IntroFacade } from '../../facades/intro.facade';
-import { SHOW_OPTIONS } from './animations/show-options.animation';
+import { SetupFacade } from 'src/app/ui/setup/facades/setup.facade';
+import { SHOW_OPTIONS } from '../../animations/show-options.animation';
 
 @Component({
   selector: 'app-options',
@@ -10,7 +10,7 @@ import { SHOW_OPTIONS } from './animations/show-options.animation';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionsComponent {
-  private introFacade = inject(IntroFacade);
+  private setupFacade = inject(SetupFacade);
 
-  public selectedSuit$ = this.introFacade.suit$;
+  public selectedSuit$ = this.setupFacade.suit$;
 }

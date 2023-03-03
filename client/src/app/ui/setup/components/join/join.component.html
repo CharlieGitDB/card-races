@@ -1,10 +1,12 @@
 <form [formGroup]="joinForm" (ngSubmit)="submit()">
+  <app-nickname formControlName="nickname"></app-nickname>
+
   <mat-form-field>
     <mat-label>Group Id</mat-label>
-    <input matInput formControlName="groupId" />
+    <input matInput formControlName="groupId" maxlength="8" />
   </mat-form-field>
   <button
-    [disabled]="!(suit$ | async) || !joinForm.controls.groupId.value || loading"
+    [disabled]="!(suit$ | async) || !joinForm.valid || loading"
     mat-raised-button
     color="primary"
   >

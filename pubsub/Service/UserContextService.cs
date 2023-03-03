@@ -31,9 +31,10 @@ public class UserContextService
     }
   }
 
-  public void UpdateGameContext(string group, Suit suit)
+  public void UpdateGameContext(string group, Suit suit, string nickname)
   {
     Instance.Group = group;
     Instance.Suit = suit;
+    Instance.NickName = nickname;
   }
 }

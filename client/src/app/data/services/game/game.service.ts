@@ -118,23 +118,25 @@ export class GameService {
       .subscribe();
   }
 
-  public createGame(suit: Suit) {
+  public createGame(suit: Suit, nickname: string) {
     const message: Message = {
       eventType: EVENT_TYPE.CREATE,
       data: {
-        suit: suit,
+        suit,
+        nickname,
       },
     };
 
     this.sendMessage(message);
   }
 
-  public joinGame(group: string, suit: Suit) {
+  public joinGame(group: string, suit: Suit, nickname: string) {
     const message: Message = {
       eventType: EVENT_TYPE.JOIN,
       data: {
         group,
         suit,
+        nickname,
       },
     };
 
