@@ -1,6 +1,11 @@
 <p class="mat-headline-5">{{ groupId$ | async }}</p>
-<p class="mat-headline-3">Players</p>
+
+<p class="mat-headline-4">Players</p>
+
 <app-player-list [users]="users$ | async"></app-player-list>
+
+<input matInput [value]="joinLocation + (groupId$ | async)" />
+
 <app-start
   [disabled]="canStartGame(users$ | async) == false"
   (startGame)="startGame()"

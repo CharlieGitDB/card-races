@@ -1,7 +1,17 @@
+@use '../../../../../variables' as vars;
+
 :host {
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+app-player-list {
+  padding-bottom: vars.$standard-spacing;
+}
+
+app-start {
+  padding-top: vars.$standard-spacing;
 }

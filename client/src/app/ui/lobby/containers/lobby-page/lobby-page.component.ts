@@ -14,6 +14,10 @@ export class LobbyPageComponent {
   public users$ = this.lobbyFacade.users$;
   public groupId$ = this.lobbyFacade.groupId$;
 
+  public get joinLocation() {
+    return `${window.location.protocol}//${window.location.host}/setup/join/`;
+  }
+
   public canStartGame(users: UserData | null): boolean {
     if (!users) {
       return false;
