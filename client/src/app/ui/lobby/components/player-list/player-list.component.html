@@ -1,5 +1,13 @@
-<mat-list role="list">
-  <ng-container *ngFor="let user of users | keyvalue">
-    <mat-list-item role="listitem">{{ user.key }} - {{ user.value }}</mat-list-item>
+<table mat-table [dataSource]="data">
+  <ng-container matColumnDef="nickname">
+    <th mat-header-cell *matHeaderCellDef>Nickname</th>
+    <th mat-ceel *matCellDef="let u">{{ u.nickname }}</th>
   </ng-container>
-</mat-list>
+  <ng-container matColumnDef="suit">
+    <th mat-header-cell *matHeaderCellDef>Suit</th>
+    <th mat-ceel *matCellDef="let u"><img [src]="'/assets/' + u.suit.toLowerCase() + '.svg'"></th>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns"></tr>
+</table>
