@@ -5,10 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CreateComponent } from './ui/intro/components/create/create.component';
-import { JoinComponent } from './ui/intro/components/join/join.component';
 import { IntroPageComponent } from './ui/intro/containers/intro-page/intro-page.component';
-import { OptionsComponent } from './ui/intro/containers/options/options.component';
 import { NotFoundPageComponent } from './ui/shared/containers/not-found-page/not-found-page.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import { BASE_API_URL_KEY } from '@constants/constants';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -36,10 +34,14 @@ import { USER_KEY } from './data/store/user/user.selectors';
 import { BoardComponent } from './ui/game/components/board/board.component';
 import { CardComponent } from './ui/game/components/card/card.component';
 import { GamePageComponent } from './ui/game/containers/game-page/game-page.component';
-import { SuitSelectComponent } from './ui/intro/components/suit-select/suit-select.component';
 import { PlayerListComponent } from './ui/lobby/components/player-list/player-list.component';
 import { StartComponent } from './ui/lobby/components/start/start.component';
 import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.component';
+import { CreateComponent } from './ui/setup/components/create/create.component';
+import { JoinComponent } from './ui/setup/components/join/join.component';
+import { SuitSelectComponent } from './ui/setup/components/suit-select/suit-select.component';
+import { SetupPageComponent } from './ui/setup/containers/setup-page/setup-page.component';
+import { NicknameComponent } from './ui/shared/form-controls/nickname/nickname.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,6 @@ import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.
     JoinComponent,
     IntroPageComponent,
     NotFoundPageComponent,
-    OptionsComponent,
     LobbyPageComponent,
     PlayerListComponent,
     StartComponent,
@@ -56,6 +57,8 @@ import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.
     CardComponent,
     SuitSelectComponent,
     BoardComponent,
+    SetupPageComponent,
+    NicknameComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,6 +71,7 @@ import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTableModule,
 
     HttpClientModule,
     StoreModule.forRoot(

@@ -5,7 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { Suit, suitList } from 'src/app/data/types/Suit';
-import { IntroFacade } from '../../facades/intro.facade';
+import { SetupFacade } from '../../facades/setup.facade';
 
 @Component({
   selector: 'app-suit-select',
@@ -14,7 +14,7 @@ import { IntroFacade } from '../../facades/intro.facade';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuitSelectComponent {
-  private introFacade = inject(IntroFacade);
+  private introFacade = inject(SetupFacade);
   private cdr = inject(ChangeDetectorRef);
 
   public suit$ = this.introFacade.suit$;

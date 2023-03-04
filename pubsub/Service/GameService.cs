@@ -34,12 +34,21 @@ public class GameService
     Container = container.Result;
   }
 
-  public async Task<GameEntry> CreateGameAsync(string userId, Suit suit)
+  public async Task<GameEntry> CreateGameAsync(string userId, Suit suit, string nickname)
   {
+    var groupId = IdUtil.GenerateId();
+    var userContext = new UserContext
+    {
+      Id = userId,
+      Group = groupId,
+      Suit = suit,
+      NickName = nickname
+    };
+
     var gameCreateResponse = await Container.CreateItemAsync(new GameEntry
     {
-      Id = IdUtil.GenerateId(),
-      UserData = new() { { userId, suit } },
+      Id = groupId,
+      UserData = new() { { userId, userContext } },
       PickedSuits = new() { suit }
     });
 
@@ -68,9 +77,17 @@ public class GameService
     }
   }
 
-  public async Task<GameEntry> JoinGameAsync(string userId, Suit suit, GameEntry game)
+  public async Task<GameEntry> JoinGameAsync(string userId, Suit suit, string nickname, GameEntry game)
   {
-    game.UserData.Add(userId, suit);
+    var userContext = new UserContext
+    {
+      Id = userId,
+      Group = game.Id,
+      Suit = suit,
+      NickName = nickname
+    };
+
+    game.UserData.Add(userId, userContext);
     game.PickedSuits.Add(suit);
 
     return await UpdateGameAsync(game);

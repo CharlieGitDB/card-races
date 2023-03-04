@@ -13,4 +13,7 @@ public class UserContext
   [JsonConverter(typeof(JsonStringEnumConverter))]
   [JsonPropertyName("suit")]
   public Suit Suit { get; set; }
+
+  [JsonPropertyName("nickname")]
+  public string NickName { get; set; }
 }

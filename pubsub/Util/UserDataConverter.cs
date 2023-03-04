@@ -9,16 +9,16 @@ using PubSub.Model;
 
 namespace PubSub.Util;
 
-public class UserDataConverter : JsonConverter<Dictionary<string, Suit>>
+public class UserDataConverter : JsonConverter<Dictionary<string, UserContext>>
 {
-  public override Dictionary<string, Suit> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+  public override Dictionary<string, UserContext> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
   {
     if (reader.TokenType != JsonTokenType.StartObject)
     {
       throw new JsonException("Json is not object");
     }
 
-    var value = new Dictionary<string, Suit>();
+    var value = new Dictionary<string, UserContext>();
 
     while (reader.Read())
     {
@@ -39,29 +39,49 @@ public class UserDataConverter : JsonConverter<Dictionary<string, Suit>>
         throw new JsonException();
       }
 
-      var suitString = reader.GetString();
+      var userContextString = reader.GetString();
 
-      var parsed = Enum.TryParse(suitString, out Suit suit);
-
-      if (!parsed)
+      if (userContextString == null)
       {
-        throw new JsonException("Unable to parse suit value");
+        throw new JsonException("Unable to parse user context");
       }
 
-      value.Add(userId, suit);
+      UserContext? parsed = JsonSerializer.Deserialize<UserContext>(userContextString);
+
+      if (parsed == null)
+      {
+        throw new JsonException("Unable to parse user context");
+      }
+
+      value.Add(userId, parsed);
     }
 
     throw new JsonException();
   }
 
-  public override void Write(Utf8JsonWriter writer, Dictionary<string, Suit> userData, JsonSerializerOptions options)
+  public override void Write(Utf8JsonWriter writer, Dictionary<string, UserContext> userData, JsonSerializerOptions options)
   {
     writer.WriteStartObject();
 
-    foreach ((string userId, Suit suit) in userData)
+    foreach ((string userId, UserContext userContext) in userData)
     {
       writer.WritePropertyName(userId);
-      writer.WriteStringValue(suit.ToString());
+
+      writer.WriteStartObject();
+
+      writer.WritePropertyName("id");
+      writer.WriteStringValue(userId);
+
+      writer.WritePropertyName("group");
+      writer.WriteStringValue(userContext.Group);
+
+      writer.WritePropertyName("suit");
+      writer.WriteStringValue(userContext.Suit.ToString());
+
+      writer.WritePropertyName("nickname");
+      writer.WriteStringValue(userContext.NickName);
+
+      writer.WriteEndObject();
     }
 
     writer.WriteEndObject();

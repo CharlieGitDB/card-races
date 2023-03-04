@@ -13,7 +13,7 @@ public class GameEntry
 
   [JsonConverter(typeof(UserDataConverter))]
   [JsonPropertyName("userData")]
-  public Dictionary<string, Suit> UserData { get; set; } = new Dictionary<string, Suit>();
+  public Dictionary<string, UserContext> UserData { get; set; } = new Dictionary<string, UserContext>();
 
   [JsonConverter(typeof(PickedSuitsConverter))]
   [JsonPropertyName("pickedSuits")]
@@ -57,11 +57,11 @@ public class GameEntry
     }
   }
 
-  public Dictionary<string, Suit> GetWinningUsers(Suit winningSuit)
+  public Dictionary<string, UserContext> GetWinningUsers(Suit winningSuit)
   {
     var userData = UserData
       .ToList()
-      .Where(entry => entry.Value == winningSuit)
+      .Where(entry => entry.Value.Suit == winningSuit)
       .ToDictionary(entry => entry.Key, entry => entry.Value);
 
     return userData;

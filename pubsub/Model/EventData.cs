@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace PubSub.Model;
@@ -14,9 +13,6 @@ public class EventData
   [JsonPropertyName("suit")]
   public Suit? Suit { get; set; }
 
-  internal void Deconstruct(out string? group, out Suit? suit)
-  {
-    group = Group;
-    suit = Suit;
-  }
+  [JsonPropertyName("nickname")]
+  public string? NickName { get; set; }
 }

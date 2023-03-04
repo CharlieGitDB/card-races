@@ -8,7 +8,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { SUIT } from 'src/app/data/types/Suit';
 import { MOCK_GROUP_ID } from 'src/app/testing/mock';
-import { IntroFacade } from '../../facades/intro.facade';
+import { SetupFacade } from '../../facades/setup.facade';
 
 import { JoinComponent } from './join.component';
 
@@ -29,7 +29,7 @@ describe('JoinComponent', () => {
       providers: [
         provideMockStore(),
         {
-          provide: IntroFacade,
+          provide: SetupFacade,
           useValue: {
             joinGame: mockJoinGame,
           },

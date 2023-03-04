@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Suit } from 'src/app/data/types/Suit';
+import { UserData } from 'src/app/data/types/UserData';
 import { LobbyFacade } from '../../facades/lobby.facade';
 
 @Component({
@@ -14,7 +14,11 @@ export class LobbyPageComponent {
   public users$ = this.lobbyFacade.users$;
   public groupId$ = this.lobbyFacade.groupId$;
 
-  public canStartGame(users: Record<string, Suit> | null): boolean {
+  public get joinLocation() {
+    return `${window.location.protocol}//${window.location.host}/setup/join/`;
+  }
+
+  public canStartGame(users: UserData | null): boolean {
     if (!users) {
       return false;
     }
