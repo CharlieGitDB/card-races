@@ -14,15 +14,15 @@ import { SetupFacade } from '../../facades/setup.facade';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuitSelectComponent {
-  private introFacade = inject(SetupFacade);
+  private setupFacade = inject(SetupFacade);
   private cdr = inject(ChangeDetectorRef);
 
-  public suit$ = this.introFacade.suit$;
+  public suit$ = this.setupFacade.suit$;
 
   public suits: Suit[] = suitList;
 
   public selectSuit(suit: Suit) {
-    this.introFacade.setSuit(suit);
+    this.setupFacade.setSuit(suit);
     this.cdr.detectChanges();
   }
 }

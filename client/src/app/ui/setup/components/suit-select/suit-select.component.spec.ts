@@ -3,6 +3,7 @@ import { By } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { suitReducer, SUIT_KEY } from 'src/app/data/store/store';
 import { suitList } from 'src/app/data/types/Suit';
+import { MOCK_ACTIVATED_ROUTE } from 'src/app/testing/mock';
 
 import { SuitSelectComponent } from './suit-select.component';
 
@@ -22,6 +23,7 @@ describe('SuitSelectComponent', () => {
         ),
       ],
       declarations: [SuitSelectComponent],
+      providers: [MOCK_ACTIVATED_ROUTE],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SuitSelectComponent);
@@ -52,7 +54,7 @@ describe('SuitSelectComponent', () => {
 
   it('should select suit on suit click', async () => {
     spyOn(component, 'selectSuit').and.callThrough();
-    spyOn((component as any).introFacade, 'setSuit').and.callThrough();
+    spyOn((component as any).setupFacade, 'setSuit').and.callThrough();
 
     const images = fixture.debugElement
       .queryAll(By.css('img'))
@@ -70,7 +72,7 @@ describe('SuitSelectComponent', () => {
       await fixture.whenStable();
 
       expect(component.selectSuit).toHaveBeenCalledWith(suit);
-      expect((component as any).introFacade.setSuit).toHaveBeenCalledWith(suit);
+      expect((component as any).setupFacade.setSuit).toHaveBeenCalledWith(suit);
       expect(suitImage?.classList.contains('selected')).toBeTruthy();
     }
   });

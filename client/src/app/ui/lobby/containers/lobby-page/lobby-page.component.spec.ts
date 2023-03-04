@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { AppState } from 'src/app/data/types/AppState';
@@ -7,6 +8,7 @@ import { SUIT } from 'src/app/data/types/types';
 import {
   MOCK_GROUP_ID,
   MOCK_INITIAL_STORE_STATE,
+  MOCK_NICKNAME,
   MOCK_USER_ID,
 } from 'src/app/testing/mock';
 import { PlayerListComponent } from '../../components/player-list/player-list.component';
@@ -21,7 +23,7 @@ describe('LobbyPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatListModule],
+      imports: [MatListModule, MatTableModule],
       declarations: [LobbyPageComponent, PlayerListComponent, StartComponent],
       providers: [
         provideMockStore<AppState>({
@@ -66,8 +68,18 @@ describe('LobbyPageComponent', () => {
 
   it('should return true for lobbyPage.canStartGame when there is more than one user', () => {
     const userData = {
-      [MOCK_USER_ID]: SUIT.CLUBS,
-      FAKEUSER2: SUIT.DIAMONDS,
+      [MOCK_USER_ID]: {
+        id: MOCK_USER_ID,
+        suit: SUIT.CLUBS,
+        group: MOCK_GROUP_ID,
+        nickname: MOCK_NICKNAME,
+      },
+      FAKEUSER2: {
+        id: 'FAKEUSER2',
+        suit: SUIT.DIAMONDS,
+        group: MOCK_GROUP_ID,
+        nickname: 'MOK',
+      },
     };
 
     const canStartGame = component.canStartGame(userData);
@@ -77,7 +89,12 @@ describe('LobbyPageComponent', () => {
 
   it('should return false for lobbyPage.canStartGame when there is less than one user', () => {
     const userData = {
-      [MOCK_USER_ID]: SUIT.CLUBS,
+      [MOCK_USER_ID]: {
+        id: MOCK_USER_ID,
+        suit: SUIT.CLUBS,
+        group: MOCK_GROUP_ID,
+        nickname: MOCK_NICKNAME,
+      },
     };
 
     const canStartGame = component.canStartGame(userData);

@@ -1,9 +1,14 @@
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatListItem, MatListModule } from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
+import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
 import { SUIT } from 'src/app/data/types/Suit';
-import { MOCK_USER_ID } from 'src/app/testing/mock';
+import {
+  MOCK_GROUP_ID,
+  MOCK_NICKNAME,
+  MOCK_USER_ID,
+} from 'src/app/testing/mock';
 
 import { PlayerListComponent } from './player-list.component';
 
@@ -14,7 +19,7 @@ describe('PlayerListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatListModule],
+      imports: [MatListModule, MatTableModule],
       declarations: [PlayerListComponent],
     }).compileComponents();
 
@@ -32,26 +37,40 @@ describe('PlayerListComponent', () => {
 
   afterEach(() => fixture.destroy());
 
-  it('should not have any list items when Input() users is null', () => {
-    const matListItems = fixture.debugElement.query(By.directive(MatListItem));
+  it('should not have any table rows when Input() users is null', () => {
+    const rows = fixture.debugElement.query(By.css('tbody tr'));
 
-    expect(matListItems).toBeFalsy();
+    expect(rows).toBeFalsy();
   });
 
-  it('should have list items when Input() users has data', () => {
+  it('should have table rows when Input() users has data', () => {
+    const mockSuit = SUIT.DIAMONDS;
     componentRef.setInput('users', {
-      [MOCK_USER_ID]: SUIT.DIAMONDS,
+      [MOCK_USER_ID]: {
+        id: MOCK_USER_ID,
+        group: MOCK_GROUP_ID,
+        suit: mockSuit,
+        nickname: MOCK_NICKNAME,
+      },
     });
     fixture.detectChanges();
 
-    const matListItems = fixture.debugElement.query(By.directive(MatListItem));
+    const rows = fixture.debugElement.query(By.css('tbody tr'));
 
-    expect(matListItems).toBeTruthy();
+    expect(rows).toBeTruthy();
 
-    const firstListItem = matListItems.children[0];
+    const cells = rows.queryAll(By.css('th'));
+    const firstCell = cells[0];
+    const secondCell = cells[1];
 
-    expect(firstListItem.nativeElement.textContent).toBe(
-      `${MOCK_USER_ID} - ${SUIT.DIAMONDS}`
-    );
+    const suitImg = secondCell.query(By.css('img'));
+
+    const suitSrc = (suitImg.nativeElement as HTMLImageElement).src.split(
+      '/assets/'
+    )[1];
+
+    expect(firstCell.nativeElement.textContent).toBe(MOCK_NICKNAME);
+    expect(suitImg).toBeTruthy();
+    expect(suitSrc).toEqual(`${mockSuit.toLowerCase()}.svg`);
   });
 });
