@@ -8,7 +8,11 @@ import {
 } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 import { SUIT } from 'src/app/data/types/Suit';
-import { MOCK_GROUP_ID, MOCK_USER_ID } from 'src/app/testing/mock';
+import {
+  MOCK_GROUP_ID,
+  MOCK_NICKNAME,
+  MOCK_USER_ID,
+} from 'src/app/testing/mock';
 import { LobbyFacade } from './lobby.facade';
 
 describe('LobbyFacade', () => {
@@ -45,8 +49,14 @@ describe('LobbyFacade', () => {
 
   it('should have users when selectGameUserData', async () => {
     const mockUsers = {
-      [MOCK_USER_ID]: SUIT.CLUBS,
+      [MOCK_USER_ID]: {
+        id: MOCK_USER_ID,
+        suit: SUIT.CLUBS,
+        group: MOCK_GROUP_ID,
+        nickname: MOCK_NICKNAME,
+      },
     };
+
     store.overrideSelector(selectGameUserData, mockUsers);
 
     store.refreshState();
