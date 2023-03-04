@@ -1,35 +1,30 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideMockStore } from '@ngrx/store/testing';
-import { IntroPageComponent } from './intro-page.component';
 
-describe('IntroPageComponent', () => {
-  let component: IntroPageComponent;
-  let fixture: ComponentFixture<IntroPageComponent>;
+import { NicknameComponent } from './nickname.component';
+
+describe('NicknameComponent', () => {
+  let component: NicknameComponent;
+  let fixture: ComponentFixture<NicknameComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
-        MatFormFieldModule,
-        BrowserAnimationsModule,
         ReactiveFormsModule,
         MatInputModule,
+        MatFormFieldModule,
+        BrowserAnimationsModule,
       ],
-      declarations: [IntroPageComponent],
-      providers: [provideMockStore()],
+      declarations: [NicknameComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(IntroPageComponent);
+    fixture = TestBed.createComponent(NicknameComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
-  afterEach(() => fixture.destroy());
 
   it('should create', () => {
     expect(component).toBeTruthy();

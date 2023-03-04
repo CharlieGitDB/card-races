@@ -9,8 +9,12 @@ import {
 } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 import { SUIT } from 'src/app/data/types/Suit';
-import { MOCK_GROUP_ID } from 'src/app/testing/mock';
-import { IntroFacade } from './intro.facade';
+import {
+  MOCK_ACTIVATED_ROUTE,
+  MOCK_GROUP_ID,
+  MOCK_NICKNAME,
+} from 'src/app/testing/mock';
+import { SetupFacade } from './setup.facade';
 
 describe('IntroFacade', () => {
   let introFacade: IntroFacade;
@@ -18,7 +22,7 @@ describe('IntroFacade', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideMockStore(), IntroFacade],
+      providers: [provideMockStore(), SetupFacade, MOCK_ACTIVATED_ROUTE],
     }).compileComponents();
 
     introFacade = TestBed.inject(IntroFacade);
@@ -37,20 +41,24 @@ describe('IntroFacade', () => {
   });
 
   it('should dispatch createGame on intro.createGame', () => {
-    spyOn((introFacade as any).store, 'dispatch');
-    introFacade.createGame(SUIT.HEARTS);
+    spyOn((setupFacade as any).store, 'dispatch');
+    setupFacade.createGame(SUIT.HEARTS, MOCK_NICKNAME);
 
-    expect((introFacade as any).store.dispatch).toHaveBeenCalledWith(
-      CreateGame({ suit: SUIT.HEARTS })
+    expect((setupFacade as any).store.dispatch).toHaveBeenCalledWith(
+      CreateGame({ suit: SUIT.HEARTS, nickname: MOCK_NICKNAME })
     );
   });
 
   it('should dispatch joinGame on intro.joinGame', () => {
-    spyOn((introFacade as any).store, 'dispatch');
-    introFacade.joinGame(MOCK_GROUP_ID, SUIT.SPADES);
+    spyOn((setupFacade as any).store, 'dispatch');
+    setupFacade.joinGame(MOCK_GROUP_ID, SUIT.SPADES, MOCK_NICKNAME);
 
-    expect((introFacade as any).store.dispatch).toHaveBeenCalledWith(
-      JoinGame({ group: MOCK_GROUP_ID, suit: SUIT.SPADES })
+    expect((setupFacade as any).store.dispatch).toHaveBeenCalledWith(
+      JoinGame({
+        group: MOCK_GROUP_ID,
+        suit: SUIT.SPADES,
+        nickname: MOCK_NICKNAME,
+      })
     );
   });
 

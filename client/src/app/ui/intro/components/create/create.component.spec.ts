@@ -1,15 +1,19 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import {
   MatProgressSpinner,
   MatProgressSpinnerModule,
 } from '@angular/material/progress-spinner';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { SUIT } from 'src/app/data/types/Suit';
-import { MOCK_INITIAL_STORE_STATE } from 'src/app/testing/mock';
-import { IntroFacade } from '../../facades/intro.facade';
+import { MOCK_INITIAL_STORE_STATE, MOCK_NICKNAME } from 'src/app/testing/mock';
+import { NicknameComponent } from 'src/app/ui/shared/form-controls/nickname/nickname.component';
 
 import { CreateComponent } from './create.component';
 
@@ -21,8 +25,14 @@ describe('CreateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatProgressSpinnerModule],
-      declarations: [CreateComponent],
+      imports: [
+        MatProgressSpinnerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+      ],
+      declarations: [CreateComponent, NicknameComponent],
       providers: [
         provideMockStore({
           initialState: MOCK_INITIAL_STORE_STATE,
@@ -62,9 +72,12 @@ describe('CreateComponent', () => {
     expect(createGameButton.disabled).toBeTrue();
   });
 
-  it('should NOT disable button when loading is false', () => {
+  it('should NOT disable button when loading is false and nickname is valid', () => {
     component.loading = false;
-    cdr.detectChanges();
+    component.createForm.setValue({
+      nickname: MOCK_NICKNAME,
+    });
+    fixture.detectChanges();
 
     const createGameButton = fixture.debugElement.query(By.css('button'))
       .nativeElement as HTMLButtonElement;
@@ -94,7 +107,13 @@ describe('CreateComponent', () => {
   });
 
   it('should call createGame when create game button is clicked', async () => {
-    spyOn(component, 'createGame').and.callThrough();
+    component.createForm.setValue({
+      nickname: MOCK_NICKNAME,
+    });
+
+    fixture.detectChanges();
+
+    spyOn(component, 'submit').and.callThrough();
 
     const createGameButton = fixture.debugElement.query(By.css('button'))
       .nativeElement as HTMLButtonElement;
@@ -102,7 +121,7 @@ describe('CreateComponent', () => {
     createGameButton.click();
     await fixture.whenStable();
 
-    expect(component.createGame).toHaveBeenCalled();
+    expect(component.submit).toHaveBeenCalled();
     expect(mockIntroCreateGame).toHaveBeenCalled();
   });
 });
