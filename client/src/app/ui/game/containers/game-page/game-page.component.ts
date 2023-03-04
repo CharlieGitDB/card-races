@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { GameFacade } from '../../facades/game.facade';
 
 @Component({
@@ -7,9 +12,10 @@ import { GameFacade } from '../../facades/game.facade';
   styleUrls: ['./game-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GamePageComponent {
+export class GamePageComponent implements OnInit {
   private gameFacade = inject(GameFacade);
 
-  public winner$ = this.gameFacade.winner$;
-  public isWinner$ = this.gameFacade.isWinner$;
+  public ngOnInit(): void {
+    this.gameFacade.watchForWinner$.subscribe();
+  }
 }
