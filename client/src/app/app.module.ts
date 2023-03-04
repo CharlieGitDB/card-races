@@ -6,7 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { IntroPageComponent } from './ui/intro/containers/intro-page/intro-page.component';
-import { OptionsComponent } from './ui/intro/containers/options/options.component';
 import { NotFoundPageComponent } from './ui/shared/containers/not-found-page/not-found-page.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -51,7 +50,6 @@ import { NicknameComponent } from './ui/shared/form-controls/nickname/nickname.c
     JoinComponent,
     IntroPageComponent,
     NotFoundPageComponent,
-    OptionsComponent,
     LobbyPageComponent,
     PlayerListComponent,
     StartComponent,
