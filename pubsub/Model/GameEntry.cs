@@ -32,7 +32,7 @@ public class GameEntry
 
   [JsonConverter(typeof(StatsConverter))]
   [JsonPropertyName("stats")]
-  public Dictionary<Suit, int> Stats { get; set; } = InitStats();
+  public Dictionary<Suit, int> Stats { get; set; } = ResetStats();
 
   [JsonPropertyName("group")]
   public string Group => Id;
@@ -67,11 +67,21 @@ public class GameEntry
     return userData;
   }
 
-  private static Dictionary<Suit, int> InitStats()
+  public void ResetGame()
+  {
+    Stats = ResetStats();
+    Winner = null;
+    RecentPick = null;
+    CurrentRound = 0;
+    Started = false;
+  }
+
+  private static Dictionary<Suit, int> ResetStats()
   {
     return Enum.GetValues<Suit>()
       .ToDictionary(suit => suit, suit => 0);
   }
+
 
   private Suit GetRandomSuit()
   {

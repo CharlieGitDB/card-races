@@ -1,6 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -13,6 +14,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { SUIT } from 'src/app/data/types/Suit';
 import { MOCK_INITIAL_STORE_STATE, MOCK_NICKNAME } from 'src/app/testing/mock';
+import { LoadingButtonComponent } from 'src/app/ui/shared/components/loading-button/loading-button.component';
 import { NicknameComponent } from 'src/app/ui/shared/form-controls/nickname/nickname.component';
 import { SetupFacade } from '../../facades/setup.facade';
 
@@ -32,8 +34,13 @@ describe('CreateComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
+        MatButtonModule,
       ],
-      declarations: [CreateComponent, NicknameComponent],
+      declarations: [
+        CreateComponent,
+        NicknameComponent,
+        LoadingButtonComponent,
+      ],
       providers: [
         provideMockStore({
           initialState: MOCK_INITIAL_STORE_STATE,

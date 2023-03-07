@@ -43,6 +43,7 @@ import { SuitSelectComponent } from './ui/setup/components/suit-select/suit-sele
 import { SetupPageComponent } from './ui/setup/containers/setup-page/setup-page.component';
 import { NicknameComponent } from './ui/shared/form-controls/nickname/nickname.component';
 import { PostGamePageComponent } from './ui/post-game/containers/post-game-page/post-game-page.component';
+import { LoadingButtonComponent } from './ui/shared/components/loading-button/loading-button.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { PostGamePageComponent } from './ui/post-game/containers/post-game-page/
     SetupPageComponent,
     NicknameComponent,
     PostGamePageComponent,
+    LoadingButtonComponent,
   ],
   imports: [
     BrowserModule,

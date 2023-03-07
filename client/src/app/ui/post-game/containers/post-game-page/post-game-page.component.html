@@ -1,4 +1,8 @@
 <p class="mat-headline-1">{{ (winner$ | async) + ' wins!' }}</p>
+<ng-container [ngSwitch]="(isWinner$ | async)">
+  <p class="mat-headline-2" *ngSwitchCase="true">You win!</p>
+  <p class="mat-headline-2" *ngSwitchCase="false">You lose!</p>
+</ng-container>
 
 Winners
 <ul>
@@ -6,3 +10,8 @@ Winners
     <li>{{ winner.nickname }}</li>
   </ng-container>
 </ul>
+
+<div class="actions-container">
+  <app-loading-button [disabled]="loading" [loading]="loading" (clicked)="replayGame()">Replay</app-loading-button>
+  <app-loading-button [disabled]="loading" [loading]="loading" (clicked)="goToIntroPage()">Leave</app-loading-button>
+</div>

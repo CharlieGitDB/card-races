@@ -1,16 +1,7 @@
 <form [formGroup]="createForm" (ngSubmit)="submit()">
   <app-nickname formControlName="nickname"></app-nickname>
 
-  <button
-    [disabled]="!(suit$ | async) || loading || !createForm.valid"
-    mat-raised-button
-    color="primary"
-  >
-    <ng-container *ngIf="!loading">
-      Create Game
-    </ng-container>
-    <ng-container *ngIf="loading">
-      <mat-spinner diameter="20" color="accent"></mat-spinner>
-    </ng-container>
-  </button>
+  <app-loading-button [disabled]="!(suit$ | async) || loading || !createForm.valid" [loading]="loading" (clicked)="submit()">
+    Create Game
+  </app-loading-button>
 </form>

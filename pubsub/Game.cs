@@ -49,6 +49,7 @@ public class Game
         break;
       case EventType.JOIN:
       case EventType.START:
+      case EventType.REPLAY:
         var group = gameEvent.EventType == EventType.JOIN ? gameEvent.Data?.Group : userContextService.Instance.Group;
         if (group == null) throw new Exception("Group id is required");
 
@@ -59,9 +60,13 @@ public class Game
         {
           await gameEventHandler.HandleJoinGame(userId, game);
         }
-        else
+        else if (gameEvent.EventType == EventType.START)
         {
           await gameEventHandler.HandleStartGame(group, game);
+        }
+        else
+        {
+          await gameEventHandler.HandleReplayGame(group, game);
         }
         break;
       default:

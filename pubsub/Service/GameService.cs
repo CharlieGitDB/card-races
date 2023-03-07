@@ -99,6 +99,12 @@ public class GameService
     return await UpdateGameAsync(game);
   }
 
+  public async Task<GameEntry> ReplayGameAsync(GameEntry game)
+  {
+    game.ResetGame();
+    return await UpdateGameAsync(game);
+  }
+
   private async Task<GameEntry> UpdateGameAsync(GameEntry game)
   {
     var updateGameResponse = await Container.UpsertItemAsync<GameEntry>(game);

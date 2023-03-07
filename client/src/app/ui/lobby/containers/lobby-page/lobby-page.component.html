@@ -6,7 +6,4 @@
 
 <input matInput [value]="joinLocation + (groupId$ | async)" />
 
-<app-start
-  [disabled]="canStartGame(users$ | async) == false"
-  (startGame)="startGame()"
-></app-start>
+<app-loading-button [disabled]="canStartGame(users$ | async) == false" (clicked)="startGame()">Start Game</app-loading-button>

@@ -5,16 +5,8 @@
     <mat-label>Group Id</mat-label>
     <input matInput formControlName="groupId" maxlength="8" />
   </mat-form-field>
-  <button
-    [disabled]="!(suit$ | async) || !joinForm.valid || loading"
-    mat-raised-button
-    color="primary"
-  >
-    <ng-container *ngIf="!loading">
-      Join Game
-    </ng-container>
-    <ng-container *ngIf="loading">
-      <mat-spinner diameter="20" color="accent"></mat-spinner>
-    </ng-container>
-  </button>
+
+  <app-loading-button [disabled]="!(suit$ | async) || !joinForm.valid || loading" [loading]="loading" (clicked)="submit()">
+    Join Game
+  </app-loading-button>
 </form>

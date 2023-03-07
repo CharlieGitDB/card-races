@@ -11,5 +11,6 @@ public enum EventType
   ADVANCE,
   WINNER,
   REPLAY,
+  RESTARTED,
   INFO
 }
