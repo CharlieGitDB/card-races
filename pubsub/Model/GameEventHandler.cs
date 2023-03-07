@@ -89,9 +89,26 @@ public class GameEventHandler
     await sendGameWinner(group, declareWinner);
 
     _logger.LogInformation("[START] Game Finished");
-    _logger.LogInformation("[START] Deleting game..");
-    await _gameService.DeleteGameAsync(updatedGame.Id);
-    _logger.LogInformation("[START] Deleted game..");
+  }
+
+  public async Task HandleReplayGame(string group, GameEntry game)
+  {
+    var restartedGame = await _gameService.ReplayGameAsync(game);
+    _logger.LogInformation($"[{group}][REPLAY] Game has been reset |{JsonConvert.SerializeObject(restartedGame)}|");
+
+    await sendGameRestarted(group, game);
+  }
+
+  private async Task sendGameRestarted(string group, GameEntry restartedGame)
+  {
+    var restartedGameResponse = new Response
+    {
+      Scope = Scope.GROUP,
+      EventType = EventType.RESTARTED,
+      Data = restartedGame
+    };
+    var messageData = BinaryData.FromObjectAsJson(restartedGameResponse);
+    await _actions.AddAsync(WebPubSubAction.CreateSendToGroupAction(group, messageData, WebPubSubDataType.Json));
   }
 
   private async Task sendGameWinner(string group, Dictionary<string, UserContext> declareWinner)

@@ -8,6 +8,7 @@ export type EventType =
   | 'ADVANCE'
   | 'WINNER'
   | 'REPLAY'
+  | 'RESTARTED'
   | 'INFO';
 
 export const EVENT_TYPE: Record<EventType, EventType> = {
@@ -20,5 +21,6 @@ export const EVENT_TYPE: Record<EventType, EventType> = {
   ADVANCE: 'ADVANCE',
   WINNER: 'WINNER',
   REPLAY: 'REPLAY',
+  RESTARTED: 'RESTARTED',
   INFO: 'INFO',
 };
