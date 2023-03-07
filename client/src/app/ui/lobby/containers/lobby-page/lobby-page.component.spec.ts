@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
@@ -11,6 +12,7 @@ import {
   MOCK_NICKNAME,
   MOCK_USER_ID,
 } from 'src/app/testing/mock';
+import { LoadingButtonComponent } from 'src/app/ui/shared/components/loading-button/loading-button.component';
 import { PlayerListComponent } from '../../components/player-list/player-list.component';
 import { StartComponent } from '../../components/start/start.component';
 
@@ -23,8 +25,13 @@ describe('LobbyPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatListModule, MatTableModule],
-      declarations: [LobbyPageComponent, PlayerListComponent, StartComponent],
+      imports: [MatListModule, MatTableModule, MatButtonModule],
+      declarations: [
+        LobbyPageComponent,
+        PlayerListComponent,
+        StartComponent,
+        LoadingButtonComponent,
+      ],
       providers: [
         provideMockStore<AppState>({
           initialState: MOCK_INITIAL_STORE_STATE,
@@ -59,11 +66,11 @@ describe('LobbyPageComponent', () => {
     expect(playListComponent).toBeTruthy();
   });
 
-  it('should have app-start component', () => {
-    const playListComponent = fixture.debugElement.query(
-      By.directive(StartComponent)
+  it('should have app-loading-button component', () => {
+    const appLoadingComponent = fixture.debugElement.query(
+      By.directive(LoadingButtonComponent)
     );
-    expect(playListComponent).toBeTruthy();
+    expect(appLoadingComponent).toBeTruthy();
   });
 
   it('should return true for lobbyPage.canStartGame when there is more than one user', () => {
@@ -111,10 +118,10 @@ describe('LobbyPageComponent', () => {
   it('should call lobbyFacade.startGame when lobbyPage.startGame is ran', () => {
     component.startGame = jasmine.createSpy('startGame');
 
-    const startComponent = fixture.debugElement.query(
-      By.directive(StartComponent)
+    const loadingButton = fixture.debugElement.query(
+      By.directive(LoadingButtonComponent)
     ).componentInstance;
-    startComponent.startGame.emit();
+    loadingButton.clicked.emit();
 
     expect(component.startGame).toHaveBeenCalled();
   });

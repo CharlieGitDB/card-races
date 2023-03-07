@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
@@ -12,6 +13,7 @@ import {
   MOCK_GROUP_ID,
   MOCK_NICKNAME,
 } from 'src/app/testing/mock';
+import { LoadingButtonComponent } from 'src/app/ui/shared/components/loading-button/loading-button.component';
 import { NicknameComponent } from 'src/app/ui/shared/form-controls/nickname/nickname.component';
 
 import { JoinComponent } from './join.component';
@@ -28,8 +30,9 @@ describe('JoinComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
+        MatButtonModule,
       ],
-      declarations: [JoinComponent, NicknameComponent],
+      declarations: [JoinComponent, NicknameComponent, LoadingButtonComponent],
       providers: [
         provideMockStore({
           initialState: {

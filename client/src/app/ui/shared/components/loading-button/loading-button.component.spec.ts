@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonModule } from '@angular/material/button';
 
 import { LoadingButtonComponent } from './loading-button.component';
 
@@ -8,9 +9,9 @@ describe('LoadingButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoadingButtonComponent ]
-    })
-    .compileComponents();
+      imports: [MatButtonModule],
+      declarations: [LoadingButtonComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoadingButtonComponent);
     component = fixture.componentInstance;
