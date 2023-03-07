@@ -1,12 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { lastValueFrom, take } from 'rxjs';
-import {
-  selectGameData,
-  selectGameStats,
-  selectGameWinner,
-  selectUserIsWinner,
-} from 'src/app/data/store/store';
+import { selectGameData, selectGameStats } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 import { SUIT } from 'src/app/data/types/Suit';
 import { MOCK_GAME_ENTRY } from 'src/app/testing/mock';
@@ -40,26 +35,6 @@ describe('GameFacade', () => {
     const stats = await lastValueFrom(gameFacade.stats$.pipe(take(1)));
 
     expect(stats).toEqual(mockStats);
-  });
-
-  it('should have winner$ when selectGameWinner', async () => {
-    const mockWinner = SUIT.SPADES;
-    store.overrideSelector(selectGameWinner, mockWinner);
-    store.refreshState();
-
-    const winner = await lastValueFrom(gameFacade.winner$.pipe(take(1)));
-
-    expect(winner).toEqual(mockWinner);
-  });
-
-  it('should have isWinner$ when selectUserIsWinner', async () => {
-    const mockWinner = true;
-    store.overrideSelector(selectUserIsWinner, mockWinner);
-    store.refreshState();
-
-    const winner = await lastValueFrom(gameFacade.isWinner$.pipe(take(1)));
-
-    expect(winner).toEqual(mockWinner);
   });
 
   it('should have recentPick$ when store game.recentPick has value', async () => {

@@ -6,7 +6,6 @@ import {
   selectGameData,
   selectGameStats,
   selectGameWinner,
-  selectUserIsWinner,
 } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 
@@ -22,8 +21,6 @@ export class GameFacade {
   public recentPick$ = this.store.select(selectGameData).pipe(
     map((gameEntry) => gameEntry.recentPick) //use map instead of selector to avoid memoized selection
   );
-
-  public isWinner$ = this.store.select(selectUserIsWinner);
 
   public watchForWinner$ = this.store.select(selectGameWinner).pipe(
     tap((winner) => {
