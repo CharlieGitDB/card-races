@@ -16,6 +16,8 @@ export class PostGamePageComponent {
   private postGameFacade = inject(PostGameFacade);
   private cdr = inject(ChangeDetectorRef);
 
+  public isWinner$ = this.postGameFacade.isWinner$;
+
   public winner$ = this.postGameFacade.winner$;
 
   public winners$ = this.postGameFacade.winners$;

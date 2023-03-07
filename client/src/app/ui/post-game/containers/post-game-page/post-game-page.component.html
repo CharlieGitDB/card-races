@@ -1,4 +1,8 @@
 <p class="mat-headline-1">{{ (winner$ | async) + ' wins!' }}</p>
+<ng-container [ngSwitch]="(isWinner$ | async)">
+  <p class="mat-headline-2" *ngSwitchCase="true">You win!</p>
+  <p class="mat-headline-2" *ngSwitchCase="false">You lose!</p>
+</ng-container>
 
 Winners
 <ul>
