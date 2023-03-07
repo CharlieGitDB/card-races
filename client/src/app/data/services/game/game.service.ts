@@ -57,6 +57,15 @@ export class GameService {
     }))
   );
 
+  public restartedGame$ = this.messages$.pipe(
+    map((res) => res as Response),
+    filter((res) => res.eventType === EVENT_TYPE.RESTARTED),
+    map((res) => ({
+      ...res,
+      data: res.data as GameEntry,
+    }))
+  );
+
   public nextRound$ = this.messages$.pipe(
     map((res) => res as Response),
     filter((res) => res.eventType === EVENT_TYPE.ADVANCE),
@@ -113,7 +122,7 @@ export class GameService {
         tap({
           error: (error: any) => console.error(error),
         }),
-        catchError((_) => EMPTY)
+        catchError(() => EMPTY)
       )
       .subscribe();
   }
@@ -146,6 +155,16 @@ export class GameService {
   public startGame() {
     const message: Message = {
       eventType: EVENT_TYPE.START,
+    };
+    this.sendMessage(message);
+  }
+
+  public restartGame(group: string) {
+    const message: Message = {
+      eventType: EVENT_TYPE.REPLAY,
+      data: {
+        group,
+      },
     };
     this.sendMessage(message);
   }

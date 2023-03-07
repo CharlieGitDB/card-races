@@ -14,6 +14,9 @@ const STARTED_GAME = '[GAME] Started game';
 
 const NEXT_ROUND = '[GAME] Start next round';
 
+const REPLAY_GAME = '[GAME] Replay game';
+const RESTARTED_GAME = '[GAME] Restarted game';
+
 export const CreateGame = createAction(
   CREATE_GAME,
   props<{ suit: Suit; nickname: string }>()
@@ -48,5 +51,12 @@ export const NextRound = createAction(
 
 export const SetGameData = createAction(
   SET_GAME_DATA,
+  props<{ gameData: GameEntry }>()
+);
+
+export const ReplayGame = createAction(REPLAY_GAME, props<{ group: string }>());
+
+export const RestartedGame = createAction(
+  RESTARTED_GAME,
   props<{ gameData: GameEntry }>()
 );

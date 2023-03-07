@@ -7,7 +7,12 @@ import {
 import { Store } from '@ngrx/store';
 import { GameService, NegotiateService } from '@services/services';
 import { lastValueFrom } from 'rxjs';
-import { JoinedGame, NextRound, StartedGame } from './data/store/store';
+import {
+  JoinedGame,
+  NextRound,
+  RestartedGame,
+  StartedGame,
+} from './data/store/store';
 import { SetUserContext } from './data/store/user/user.actions';
 import { AppState } from './data/types/AppState';
 
@@ -46,6 +51,10 @@ export class AppComponent implements OnInit {
 
     this.gameService.nextRound$.subscribe((res) =>
       this.store.dispatch(NextRound({ gameData: res.data }))
+    );
+
+    this.gameService.restartedGame$.subscribe((res) =>
+      this.store.dispatch(RestartedGame({ gameData: res.data }))
     );
   }
 }

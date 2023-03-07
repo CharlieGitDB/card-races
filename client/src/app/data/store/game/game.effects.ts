@@ -12,6 +12,8 @@ import {
   JoinedGame,
   JoinGame,
   NextRound,
+  ReplayGame,
+  RestartedGame,
   SetGameData,
   StartedGame,
   StartGame,
@@ -77,6 +79,16 @@ export class GameEffects {
     { dispatch: false }
   );
 
+  gameReplayEffect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(ReplayGame),
+        tap(() => console.log('replay game action was ran')),
+        tap(({ group }) => this.gameService.restartGame(group))
+      ),
+    { dispatch: false }
+  );
+
   joinLobbyEffect$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -125,5 +137,18 @@ export class GameEffects {
       tap(() => console.log('next round action was ran')),
       switchMap(async ({ gameData }) => SetGameData({ gameData }))
     )
+  );
+
+  restartedGameEffect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(RestartedGame),
+        tap(() => console.log('restart action was ran')),
+        switchMap(async ({ gameData }) => {
+          SetGameData({ gameData });
+          this.router.navigate(['/lobby']);
+        })
+      ),
+    { dispatch: false }
   );
 }
