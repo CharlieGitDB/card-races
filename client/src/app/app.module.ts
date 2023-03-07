@@ -42,6 +42,7 @@ import { JoinComponent } from './ui/setup/components/join/join.component';
 import { SuitSelectComponent } from './ui/setup/components/suit-select/suit-select.component';
 import { SetupPageComponent } from './ui/setup/containers/setup-page/setup-page.component';
 import { NicknameComponent } from './ui/shared/form-controls/nickname/nickname.component';
+import { PostGamePageComponent } from './ui/post-game/containers/post-game-page/post-game-page.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { NicknameComponent } from './ui/shared/form-controls/nickname/nickname.c
     BoardComponent,
     SetupPageComponent,
     NicknameComponent,
+    PostGamePageComponent,
   ],
   imports: [
     BrowserModule,

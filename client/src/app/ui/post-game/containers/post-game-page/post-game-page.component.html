@@ -1,0 +1,8 @@
+<p class="mat-headline-1">{{ (winner$ | async) + ' wins!' }}</p>
+
+Winners
+<ul>
+  <ng-container *ngFor="let winner of (winners$ | async)">
+    <li>{{ winner.nickname }}</li>
+  </ng-container>
+</ul>

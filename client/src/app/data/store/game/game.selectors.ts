@@ -37,3 +37,9 @@ export const selectUserIsWinner = createSelector(
   selectUserContext,
   (winner, userContext) => userContext.suit === winner
 );
+export const selectGameWinners = createSelector(
+  selectGameUserData,
+  selectGameWinner,
+  (userData, winner) =>
+    Object.values(userData).filter((userContext) => userContext.suit === winner)
+);

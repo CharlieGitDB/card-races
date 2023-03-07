@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 import {
   selectGameData,
   selectGameStats,
   selectGameWinner,
-  selectUserIsWinner,
 } from 'src/app/data/store/store';
 import { AppState } from 'src/app/data/types/AppState';
 
@@ -14,6 +14,7 @@ import { AppState } from 'src/app/data/types/AppState';
 })
 export class GameFacade {
   private store: Store<AppState> = inject(Store);
+  private router = inject(Router);
 
   public stats$ = this.store.select(selectGameStats);
 
@@ -21,7 +22,12 @@ export class GameFacade {
     map((gameEntry) => gameEntry.recentPick) //use map instead of selector to avoid memoized selection
   );
 
-  public winner$ = this.store.select(selectGameWinner);
-
-  public isWinner$ = this.store.select(selectUserIsWinner);
+  public watchForWinner$ = this.store.select(selectGameWinner).pipe(
+    tap((winner) => {
+      if (!!winner) {
+        //delay slightly on purpose
+        setTimeout(() => this.router.navigate(['/post-game']), 1500);
+      }
+    })
+  );
 }
