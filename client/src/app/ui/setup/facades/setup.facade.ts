@@ -5,6 +5,7 @@ import { filter, map } from 'rxjs';
 import {
   CreateGame,
   JoinGame,
+  selectLoadingData,
   selectSuit,
   SetSuit,
 } from 'src/app/data/store/store';
@@ -19,6 +20,7 @@ export class SetupFacade {
   private route = inject(ActivatedRoute);
 
   public suit$ = this.store.select(selectSuit);
+  public loading$ = this.store.select(selectLoadingData);
 
   public groupId$ = this.route.paramMap.pipe(
     filter((paramMap) => !!paramMap.get('gid')),

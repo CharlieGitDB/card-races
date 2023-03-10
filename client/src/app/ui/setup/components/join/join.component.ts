@@ -19,6 +19,7 @@ export class JoinComponent implements OnInit {
   private setupFacade = inject(SetupFacade);
 
   public suit$ = this.setupFacade.suit$;
+  public loading$ = this.setupFacade.loading$;
 
   public joinForm = new FormGroup({
     nickname: new FormControl<string | null>(null, [
@@ -33,8 +34,6 @@ export class JoinComponent implements OnInit {
     ]),
   });
 
-  public loading = false;
-
   public ngOnInit(): void {
     this.setupFacade.groupId$.subscribe((groupId) =>
       this.joinForm.patchValue({
@@ -45,14 +44,13 @@ export class JoinComponent implements OnInit {
 
   public async submit(): Promise<void> {
     const suit = await lastValueFrom(this.suit$.pipe(take(1)));
+    const loading = await lastValueFrom(this.loading$.pipe(take(1)));
     const group = this.joinForm.controls.groupId.value;
     const nickname = this.joinForm.controls.nickname.value;
 
-    if (!suit || !nickname || !group || !this.joinForm.valid || this.loading) {
+    if (!suit || !nickname || !group || !this.joinForm.valid || loading) {
       return;
     }
-
-    this.loading = true;
 
     this.setupFacade.joinGame(group, suit, nickname);
   }

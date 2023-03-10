@@ -12,6 +12,6 @@ Winners
 </ul>
 
 <div class="actions-container">
-  <app-loading-button [disabled]="loading" [loading]="loading" (clicked)="replayGame()">Replay</app-loading-button>
-  <app-loading-button [disabled]="loading" [loading]="loading" (clicked)="goToIntroPage()">Leave</app-loading-button>
+  <app-loading-button (clicked)="replayGame()">Replay</app-loading-button>
+  <app-loading-button (clicked)="goToIntroPage()">Leave</app-loading-button>
 </div>

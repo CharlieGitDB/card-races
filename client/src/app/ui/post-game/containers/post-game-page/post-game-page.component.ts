@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PostGameFacade } from '../../facades/post-game.facade';
 
 @Component({
@@ -14,7 +9,6 @@ import { PostGameFacade } from '../../facades/post-game.facade';
 })
 export class PostGamePageComponent {
   private postGameFacade = inject(PostGameFacade);
-  private cdr = inject(ChangeDetectorRef);
 
   public isWinner$ = this.postGameFacade.isWinner$;
 
@@ -22,11 +16,7 @@ export class PostGamePageComponent {
 
   public winners$ = this.postGameFacade.winners$;
 
-  public loading = false;
-
   public async replayGame() {
-    this.loading = true;
-    this.cdr.detectChanges();
     await this.postGameFacade.replayGame();
   }
 

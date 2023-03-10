@@ -2,9 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  inject,
   Input,
   Output,
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectLoadingData } from 'src/app/data/store/store';
+import { AppState } from 'src/app/data/types/AppState';
 
 @Component({
   selector: 'app-loading-button',
@@ -13,8 +17,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingButtonComponent {
-  @Input()
-  public loading = false;
+  private store: Store<AppState> = inject(Store);
 
   @Input()
   public disabled = false;
@@ -24,4 +27,6 @@ export class LoadingButtonComponent {
 
   @Output()
   public clicked = new EventEmitter<void>();
+
+  public loading$ = this.store.select(selectLoadingData);
 }

@@ -114,17 +114,6 @@ describe('JoinComponent', () => {
     expect(joinGameButton.textContent).toContain('Join Game');
   });
 
-  it('should disable join button when loading is true', async () => {
-    component.loading = true;
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    const joinGameButton = fixture.debugElement.query(By.css('button'))
-      .nativeElement as HTMLButtonElement;
-
-    expect(joinGameButton.disabled).toBeTruthy();
-  });
-
   it('should call submit when join game is clicked', async () => {
     spyOn(component, 'submit').and.callThrough();
     spyOn((component as any).setupFacade, 'joinGame').and.callThrough();
