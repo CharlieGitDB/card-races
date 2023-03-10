@@ -1,14 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  catchError,
-  EMPTY,
-  filter,
-  map,
-  of,
-  Subject,
-  switchAll,
-  tap,
-} from 'rxjs';
+import { filter, map, of, Subject, switchAll, tap } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { MessageData } from '../../types/MessageData';
 import { SCOPE } from '../../types/Scope';
@@ -29,9 +20,9 @@ export class GameService {
   private socket$: WebSocketSubject<any> | null = null;
   private messageSubject$ = new Subject<any>();
   private messages$ = this.messageSubject$.pipe(switchAll());
+  private response$ = this.messages$.pipe(map((res) => res as Response));
 
-  public createdGame$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public createdGame$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.CREATED),
     map((res) => ({
       ...res,
@@ -39,8 +30,7 @@ export class GameService {
     }))
   );
 
-  public joinedGame$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public joinedGame$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.JOINED),
     map((res) => ({
       ...res,
@@ -48,8 +38,7 @@ export class GameService {
     }))
   );
 
-  public startedGame$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public startedGame$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.STARTED),
     map((res) => ({
       ...res,
@@ -57,8 +46,7 @@ export class GameService {
     }))
   );
 
-  public restartedGame$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public restartedGame$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.RESTARTED),
     map((res) => ({
       ...res,
@@ -66,8 +54,7 @@ export class GameService {
     }))
   );
 
-  public nextRound$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public nextRound$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.ADVANCE),
     map((res) => ({
       ...res,
@@ -75,8 +62,7 @@ export class GameService {
     }))
   );
 
-  public winner$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public winner$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.WINNER),
     map((res) => ({
       ...res,
@@ -84,8 +70,7 @@ export class GameService {
     }))
   );
 
-  public info$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public info$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.INFO),
     map((res) => ({
       ...res,
@@ -93,13 +78,19 @@ export class GameService {
     }))
   );
 
-  public everyoneScope$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public errors$ = this.response$.pipe(
+    filter((res) => res.eventType === EVENT_TYPE.ERROR),
+    map((res) => ({
+      ...res,
+      data: res.data as string,
+    }))
+  );
+
+  public everyoneScope$ = this.response$.pipe(
     filter((res) => res.scope === SCOPE.ALL)
   );
 
-  public userScope$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public userScope$ = this.response$.pipe(
     filter((res) => res.scope === SCOPE.USER),
     map((res) => ({
       ...res,
@@ -107,12 +98,11 @@ export class GameService {
     }))
   );
 
-  public groupScope$ = this.messages$.pipe(
-    map((res) => res as Response),
+  public groupScope$ = this.response$.pipe(
     filter((res) => res.scope === SCOPE.GROUP)
   );
 
-  public all$ = this.messages$.pipe(map((res) => res as Response));
+  public all$ = this.response$;
 
   public connect(url: string): void {
     this.socket$ = webSocket(url);
@@ -121,10 +111,11 @@ export class GameService {
         tap((data) => this.messageSubject$.next(of(data))),
         tap({
           error: (error: any) => console.error(error),
-        }),
-        catchError(() => EMPTY)
+        })
       )
-      .subscribe();
+      .subscribe({
+        error: (err) => console.log(err, 'error???'),
+      });
   }
 
   public createGame(suit: Suit, nickname: string) {

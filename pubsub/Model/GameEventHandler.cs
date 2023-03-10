@@ -19,13 +19,16 @@ public class GameEventHandler
   private GameEvent _gameEvent;
   private GameService _gameService;
 
-  public GameEventHandler(ILogger logger, IAsyncCollector<WebPubSubAction> actions, UserContextService userContextService, GameService gameService, GameEvent gameEvent)
+  private ErrorService _errorService;
+
+  public GameEventHandler(ILogger logger, IAsyncCollector<WebPubSubAction> actions, UserContextService userContextService, GameService gameService, GameEvent gameEvent, ErrorService errorService)
   {
     _logger = logger;
     _actions = actions;
     _userContextService = userContextService;
     _gameService = gameService;
     _gameEvent = gameEvent;
+    _errorService = errorService;
   }
 
   public async Task HandleCreateGame(string userId, Suit suit, string nickname)
@@ -44,17 +47,20 @@ public class GameEventHandler
 
     if (suit == null)
     {
-      throw new Exception("Suit is required");
+      await _errorService.sendUserError(userId, "Suit is required");
+      return;
     }
 
     if (nickname == null)
     {
-      throw new Exception("Nickname is required");
+      await _errorService.sendUserError(userId, "Nickname is required");
+      return;
     }
 
     if (game.Started)
     {
-      throw new Exception("Game has already started");
+      await _errorService.sendUserError(userId, "Game has already started");
+      return;
     }
     else
     {

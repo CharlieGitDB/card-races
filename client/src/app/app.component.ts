@@ -4,6 +4,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { GameService, NegotiateService } from '@services/services';
 import { lastValueFrom } from 'rxjs';
@@ -26,6 +27,8 @@ export class AppComponent implements OnInit {
   private negotiateService = inject(NegotiateService);
   private gameService = inject(GameService);
   private store: Store<AppState> = inject(Store);
+  private snackBar = inject(MatSnackBar);
+  private FIVE_SECONDS = 5000;
 
   async ngOnInit(): Promise<void> {
     const request$ = this.negotiateService.getConnectionInfo();
@@ -55,6 +58,12 @@ export class AppComponent implements OnInit {
 
     this.gameService.restartedGame$.subscribe((res) =>
       this.store.dispatch(RestartedGame({ gameData: res.data }))
+    );
+
+    this.gameService.errors$.subscribe((res) =>
+      this.snackBar.open(res.data, 'OK', {
+        duration: this.FIVE_SECONDS,
+      })
     );
   }
 }

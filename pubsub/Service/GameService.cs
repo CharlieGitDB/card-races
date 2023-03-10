@@ -1,26 +1,30 @@
+using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using PubSub.Model;
 using PubSub.Util;
 
+#nullable enable
+
 namespace PubSub.Service;
 
 public class GameService
 {
 
-  private CosmosClient Client { get; set; }
+  private CosmosClient _client { get; set; }
 
-  private Container Container { get; set; }
+  private Container _container { get; set; }
 
-  private ILogger Logger;
+  private ILogger _logger;
 
   private readonly int ONE_DAY = 86400;
 
   public GameService(CosmosClient client, ILogger logger)
   {
-    Client = client;
-    Logger = logger;
+    _client = client;
+    _logger = logger;
 
     var db = client.CreateDatabaseIfNotExistsAsync(GameConstants.DATABASE);
 
@@ -31,7 +35,7 @@ public class GameService
       DefaultTimeToLive = ONE_DAY
     };
     var container = db.Result.Database.CreateContainerIfNotExistsAsync(containerProperties);
-    Container = container.Result;
+    _container = container.Result;
   }
 
   public async Task<GameEntry> CreateGameAsync(string userId, Suit suit, string nickname)
@@ -45,7 +49,7 @@ public class GameService
       NickName = nickname
     };
 
-    var gameCreateResponse = await Container.CreateItemAsync(new GameEntry
+    var gameCreateResponse = await _container.CreateItemAsync(new GameEntry
     {
       Id = groupId,
       UserData = new() { { userId, userContext } },
@@ -55,27 +59,20 @@ public class GameService
     return gameCreateResponse.Resource;
   }
 
-  public async Task<GameEntry> GetGameAsync(string group)
+  public async Task<GameEntry?> GetGameAsync(string group)
   {
     try
     {
-      var gameGetResponse = await Container.ReadItemAsync<GameEntry>(group, new PartitionKey(group));
-      return gameGetResponse;
+      var game = await _container.ReadItemAsync<GameEntry>(group, new PartitionKey(group));
+      return game;
     }
-    catch (CosmosException e)
+    catch (Exception e)
     {
-      // this just means that the game was not found
-      // return null instead of exception
-      if (e.StatusCode == System.Net.HttpStatusCode.NotFound)
-      {
-        return null;
-      }
-      else
-      {
-        throw e;
-      }
+      _logger.LogError($"[GAME][ERROR] Error while getting game from db.. {JsonSerializer.Serialize(e)}");
+      return null;
     }
   }
+
 
   public async Task<GameEntry> JoinGameAsync(string userId, Suit suit, string nickname, GameEntry game)
   {
@@ -107,12 +104,12 @@ public class GameService
 
   private async Task<GameEntry> UpdateGameAsync(GameEntry game)
   {
-    var updateGameResponse = await Container.UpsertItemAsync<GameEntry>(game);
+    var updateGameResponse = await _container.UpsertItemAsync<GameEntry>(game);
     return updateGameResponse.Resource;
   }
 
   public async Task DeleteGameAsync(string group)
   {
-    var deleteGameResponse = await Container.DeleteItemAsync<GameEntry>(group, new PartitionKey(group));
+    var deleteGameResponse = await _container.DeleteItemAsync<GameEntry>(group, new PartitionKey(group));
   }
 }
