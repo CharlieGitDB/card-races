@@ -1,11 +1,8 @@
-import { createActionGroup, props } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
-const LOADING_ACTIONS_SOURCE = 'Loading';
-const SET_LOADING = 'Set Loading';
+const SET_LOADING = '[LOADING] Set Loading';
 
-export const LoadingActions = createActionGroup({
-  source: LOADING_ACTIONS_SOURCE,
-  events: {
-    [SET_LOADING]: props,
-  },
-});
+export const SetLoading = createAction(
+  SET_LOADING,
+  props<{ loading: boolean }>()
+);

@@ -25,6 +25,7 @@ import {
   GameEffects,
   gameReducer,
   GAME_KEY,
+  LoadingEffects,
   loadingReducer,
   LOADING_KEY,
   suitReducer,
@@ -38,13 +39,13 @@ import { GamePageComponent } from './ui/game/containers/game-page/game-page.comp
 import { PlayerListComponent } from './ui/lobby/components/player-list/player-list.component';
 import { StartComponent } from './ui/lobby/components/start/start.component';
 import { LobbyPageComponent } from './ui/lobby/containers/lobby-page/lobby-page.component';
+import { PostGamePageComponent } from './ui/post-game/containers/post-game-page/post-game-page.component';
 import { CreateComponent } from './ui/setup/components/create/create.component';
 import { JoinComponent } from './ui/setup/components/join/join.component';
 import { SuitSelectComponent } from './ui/setup/components/suit-select/suit-select.component';
 import { SetupPageComponent } from './ui/setup/containers/setup-page/setup-page.component';
-import { NicknameComponent } from './ui/shared/form-controls/nickname/nickname.component';
-import { PostGamePageComponent } from './ui/post-game/containers/post-game-page/post-game-page.component';
 import { LoadingButtonComponent } from './ui/shared/components/loading-button/loading-button.component';
+import { NicknameComponent } from './ui/shared/form-controls/nickname/nickname.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,7 @@ import { LoadingButtonComponent } from './ui/shared/components/loading-button/lo
       },
       {}
     ),
-    EffectsModule.forRoot([GameEffects]),
+    EffectsModule.forRoot([GameEffects, LoadingEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [

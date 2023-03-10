@@ -1,9 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
-import { LoadingActions } from './loading.actions';
+import { SetLoading } from './loading.actions';
 
 const initialState: boolean = false;
 
 export const loadingReducer = createReducer(
   initialState,
-  on(LoadingActions.setLoading, (_state) => !_state)
+  on(SetLoading, (_state, { loading }) => loading)
 );
