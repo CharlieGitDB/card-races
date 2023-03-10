@@ -37,7 +37,6 @@ describe('PostGameFacade', () => {
     store.refreshState();
 
     const winner = await lastValueFrom(postGameFacade.winner$.pipe(take(1)));
-    console.log(winner, 'winner?');
     expect(winner).toEqual(suitDisplayLabels[mockWinner]);
   });
 

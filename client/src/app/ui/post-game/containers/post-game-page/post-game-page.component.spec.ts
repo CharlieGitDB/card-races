@@ -99,7 +99,6 @@ describe('PostGamePageComponent', () => {
     fixture.detectChanges();
 
     console.log(suitDisplayLabels[mockWinner], 'suit display labels');
-    console.log(mockWinner, 'mock winner?');
 
     const headline = fixture.debugElement.query(By.css('.mat-headline-1'))
       .nativeElement as HTMLDivElement;
