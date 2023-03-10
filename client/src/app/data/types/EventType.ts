@@ -9,7 +9,8 @@ export type EventType =
   | 'WINNER'
   | 'REPLAY'
   | 'RESTARTED'
-  | 'INFO';
+  | 'INFO'
+  | 'ERROR';
 
 export const EVENT_TYPE: Record<EventType, EventType> = {
   CREATE: 'CREATE',
@@ -23,4 +24,5 @@ export const EVENT_TYPE: Record<EventType, EventType> = {
   REPLAY: 'REPLAY',
   RESTARTED: 'RESTARTED',
   INFO: 'INFO',
+  ERROR: 'ERROR',
 };

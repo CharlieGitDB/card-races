@@ -34,16 +34,24 @@ public class Game
       ILogger logger)
   {
     _logger = logger;
-    var (userId, userContextService, gameEvent, gameEventHandler) = Init(connectionContext, data, _gameService, actions);
+    var (userId, userContextService, gameEvent, gameEventHandler, errorService) = Init(connectionContext, data, _gameService, actions);
 
     switch (gameEvent.EventType)
     {
       case EventType.CREATE:
         var suit = gameEvent.Data?.Suit;
-        if (suit == null) throw new Exception("Suit is required");
+        if (suit == null)
+        {
+          await errorService.sendUserError(userId, "Suit is required");
+          break;
+        }
 
         var nickname = gameEvent.Data?.NickName;
-        if (nickname == null) throw new Exception("Nickname is required");
+        if (nickname == null)
+        {
+          await errorService.sendUserError(userId, "Nickname is required");
+          break;
+        }
 
         await gameEventHandler.HandleCreateGame(userId, (Suit)suit, nickname);
         break;
@@ -51,10 +59,29 @@ public class Game
       case EventType.START:
       case EventType.REPLAY:
         var group = gameEvent.EventType == EventType.JOIN ? gameEvent.Data?.Group : userContextService.Instance.Group;
-        if (group == null) throw new Exception("Group id is required");
 
-        var game = await _gameService.GetGameAsync(group);
-        if (game == null) throw new Exception("Cannot find game");
+        if (group == null)
+        {
+          await errorService.sendUserError(userId, "Group id is required");
+          break;
+        }
+
+
+        GameEntry? game = null;
+        try
+        {
+          game = await _gameService.GetGameAsync(group);
+        }
+        catch (Exception e)
+        {
+          _logger.LogError($"{JsonConvert.SerializeObject(e)}");
+        }
+
+        if (game == null)
+        {
+          await errorService.sendUserError(userId, "Cannot find game");
+          break;
+        }
 
         if (gameEvent.EventType == EventType.JOIN)
         {
@@ -70,7 +97,8 @@ public class Game
         }
         break;
       default:
-        throw new Exception("Invalid event");
+        await errorService.sendUserError(userId, "Invalid event type");
+        break;
     }
 
     var userResponse = new Response
@@ -89,7 +117,7 @@ public class Game
     return userEventResponse;
   }
 
-  private static (string userId, UserContextService, GameEvent, GameEventHandler) Init(WebPubSubConnectionContext connectionContext, BinaryData data, GameService gameService, IAsyncCollector<WebPubSubAction> actions)
+  private static (string userId, UserContextService, GameEvent, GameEventHandler, ErrorService) Init(WebPubSubConnectionContext connectionContext, BinaryData data, GameService gameService, IAsyncCollector<WebPubSubAction> actions)
   {
     var userId = connectionContext.UserId;
 
@@ -101,8 +129,10 @@ public class Game
     var gameEvent = data.ToObjectFromJson<GameEvent>();
     _logger.LogInformation($"[{userId}][GAME EVENT] |{JsonConvert.SerializeObject(gameEvent)}|");
 
-    var gameEventHandler = new GameEventHandler(_logger, actions, userContextService, gameService, gameEvent);
+    var errorService = new ErrorService(actions);
 
-    return (userId, userContextService, gameEvent, gameEventHandler);
+    var gameEventHandler = new GameEventHandler(_logger, actions, userContextService, gameService, gameEvent, errorService);
+
+    return (userId, userContextService, gameEvent, gameEventHandler, errorService);
   }
 }
