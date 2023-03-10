@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { filter, map, of, Subject, switchAll, tap } from 'rxjs';
+import { filter, map, Observable, of, Subject, switchAll, tap } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { MessageData } from '../../types/MessageData';
 import { SCOPE } from '../../types/Scope';
@@ -17,10 +17,9 @@ import {
   providedIn: 'root',
 })
 export class GameService {
-  private socket$: WebSocketSubject<any> | null = null;
-  private messageSubject$ = new Subject<any>();
-  private messages$ = this.messageSubject$.pipe(switchAll());
-  private response$ = this.messages$.pipe(map((res) => res as Response));
+  private socket$: WebSocketSubject<unknown> | null = null;
+  private messageSubject$ = new Subject<Observable<Response>>();
+  private response$ = this.messageSubject$.pipe(switchAll());
 
   public createdGame$ = this.response$.pipe(
     filter((res) => res.eventType === EVENT_TYPE.CREATED),
@@ -108,13 +107,13 @@ export class GameService {
     this.socket$ = webSocket(url);
     this.socket$
       .pipe(
-        tap((data) => this.messageSubject$.next(of(data))),
+        tap((data) => this.messageSubject$.next(of(data as Response))),
         tap({
           error: (error: any) => console.error(error),
         })
       )
       .subscribe({
-        error: (err) => console.log(err, 'error???'),
+        error: (err) => console.error(err, 'error'),
       });
   }
 
