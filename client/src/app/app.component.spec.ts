@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BASE_API_URL_KEY } from '@constants/base-api-url-key';
@@ -19,6 +20,7 @@ describe('AppComponent', () => {
         BrowserAnimationsModule,
         ReactiveFormsModule,
         MatInputModule,
+        MatSnackBarModule,
       ],
       declarations: [AppComponent],
       providers: [
