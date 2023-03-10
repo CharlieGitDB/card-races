@@ -1,8 +1,8 @@
-<button [disabled]="loading || disabled" mat-raised-button [color]="color" (click)="clicked.emit()">
-  <ng-container *ngIf="!loading">
+<button [disabled]="(loading$ | async) || disabled" mat-raised-button [color]="color" (click)="clicked.emit()">
+  <ng-container *ngIf="!(loading$ | async)">
     <ng-content></ng-content>
   </ng-container>
-  <ng-container *ngIf="loading">
+  <ng-container *ngIf="(loading$ | async)">
     <mat-spinner diameter="20" color="accent"></mat-spinner>
   </ng-container>
 </button>

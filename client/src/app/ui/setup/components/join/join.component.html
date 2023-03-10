@@ -6,7 +6,7 @@
     <input matInput formControlName="groupId" maxlength="8" />
   </mat-form-field>
 
-  <app-loading-button [disabled]="!(suit$ | async) || !joinForm.valid || loading" [loading]="loading" (clicked)="submit()">
+  <app-loading-button [disabled]="!(suit$ | async) || !joinForm.valid" (clicked)="submit()">
     Join Game
   </app-loading-button>
 </form>
