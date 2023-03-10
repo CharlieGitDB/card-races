@@ -7,6 +7,7 @@ import {
   JoinedGame,
   JoinGame,
   ReplayGame,
+  RestartedGame,
   SetLoading,
   StartedGame,
   StartGame,
@@ -26,7 +27,7 @@ export class LoadingEffects {
 
   disableLoadingEffect$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GameWasCreated, JoinedGame, StartedGame),
+      ofType(GameWasCreated, JoinedGame, StartedGame, RestartedGame),
       tap(() => console.log('stopping loading')),
       switchMap(async () => SetLoading({ loading: false }))
     )
