@@ -37,7 +37,7 @@ jobs:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
   provision-storage:
-    needs: provision-resourcegroup
+    needs: [provision-resourcegroup, provision-pubsub]
     uses: ./.github/workflows/storage-config.yml
     with:
       resourcegroup: ${{ inputs.environment }}-cardraces-rg
@@ -47,7 +47,7 @@ jobs:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
   provision-cosmosdb:
-    needs: provision-resourcegroup
+    needs: [provision-resourcegroup, provision-storage]
     uses: ./.github/workflows/cosmosdb-config.yml
     with:
       resourcegroup: ${{ inputs.environment }}-cardraces-rg
